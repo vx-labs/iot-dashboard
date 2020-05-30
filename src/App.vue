@@ -1,9 +1,9 @@
 <template>
   <v-app>
     <AppDrawer></AppDrawer>
-    <v-app-bar app color="white" dense>
-      <v-toolbar-title>🐝 Dashboard</v-toolbar-title>
+    <v-app-bar height="73" app flat>
       <v-spacer></v-spacer>
+      <v-app-bar-title>🐝</v-app-bar-title>
     </v-app-bar>
 
     <v-content>
