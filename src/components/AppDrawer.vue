@@ -14,7 +14,7 @@
 
     <v-divider></v-divider>
 
-    <v-list nav dense v-if="authenticated">
+    <v-list nav dense>
       <v-list-item link to="/">
         <v-list-item-icon>
           <v-icon>mdi-home</v-icon>
@@ -29,9 +29,7 @@
       </v-list-item>
     </v-list>
     <template v-slot:append>
-      <div class="pa-2">
-        <AuthButton></AuthButton>
-      </div>
+      <AuthButton></AuthButton>
     </template>
   </v-navigation-drawer>
 </template>
