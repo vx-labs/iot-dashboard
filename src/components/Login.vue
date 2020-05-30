@@ -3,7 +3,10 @@
     <v-card>
       <v-card-title class="headline">This page requires authentication</v-card-title>
 
-      <v-card-text>Let Google help apps determine location. This means sending anonymous location data to Google, even when no apps are running.</v-card-text>
+      <v-card-text>
+        You must be logged in to access this page.<br/>
+        Click the login button below to prove your identity.
+      </v-card-text>
 
       <v-card-actions>
         <v-spacer></v-spacer>

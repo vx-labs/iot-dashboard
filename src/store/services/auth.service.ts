@@ -9,16 +9,16 @@ export default class Authenticator {
     this.auth0 = new Auth0Client({
       domain: domain,
       client_id: clientID,
-      redirect_uri: window.location.origin,
+      redirect_uri: window.location.origin + '/login',
       cacheLocation: "localstorage",
       connection: 'google-oauth2',
       audience: 'https://api.iot.cloud.vx-labs.net',
     })
   }
 
-  login(redirectUri?: string) {
+  login(appState?: string) {
     return this.auth0.loginWithRedirect({
-      appState: redirectUri,
+      appState: appState,
     });
   }
   logout() {

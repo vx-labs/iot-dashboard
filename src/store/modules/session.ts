@@ -50,8 +50,8 @@ const authModule: Module<any, any> = {
         return dispatch('login');
       }
     },
-    async login(context, redirectUrl?: string) {
-      return auth.login(redirectUrl);
+    async login(context, appState?: string) {
+      return auth.login(appState);
     },
     logout({ commit }) {
       auth.logout();
