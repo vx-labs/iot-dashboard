@@ -33,7 +33,9 @@ export default class Authenticator {
       }
     }
 
-    return this.auth0.logout();
+    return this.auth0.logout({
+      returnTo: window.location.origin,
+    });
   }
   async handleAuthentication(): Promise<any> {
     try {

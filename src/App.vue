@@ -3,7 +3,7 @@
     <AppDrawer></AppDrawer>
     <v-app-bar height="73" app flat>
       <v-spacer></v-spacer>
-      <v-app-bar-title>🐝</v-app-bar-title>
+      <v-toolbar-title>🐝</v-toolbar-title>
     </v-app-bar>
 
     <v-content>
