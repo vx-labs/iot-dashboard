@@ -1,16 +1,21 @@
 <template>
   <v-dialog v-model="dialog" max-width="450">
     <v-card>
-      <v-card-title class="headline">This page requires authentication</v-card-title>
+      <v-card-title class="headline">Login</v-card-title>
 
       <v-card-text>
-        You must be logged in to access this page.<br/>
-        Click the login button below to prove your identity.
+        You must be logged in to access this page.
+        <br />Click the login button below to prove your identity.
       </v-card-text>
 
       <v-card-actions>
         <v-spacer></v-spacer>
-        <v-btn text @click="doLogin()">Login</v-btn>
+        <v-btn
+          text
+          :loading="authenticationPending"
+          :disabled="authenticationPending"
+          @click="doLogin()"
+        >Login</v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>

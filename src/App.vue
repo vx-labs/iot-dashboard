@@ -1,7 +1,7 @@
 <template>
   <v-app>
-    <v-navigation-drawer app permanent expand-on-hover>
-      <v-list v-if="authenticated" two-line>
+    <v-navigation-drawer v-if="authenticated" app permanent expand-on-hover>
+      <v-list two-line>
         <v-list-item class="px-2">
           <v-list-item-avatar>
             <v-img :src="profile.picture"></v-img>

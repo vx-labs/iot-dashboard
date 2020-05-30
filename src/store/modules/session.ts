@@ -6,7 +6,7 @@ const auth = new Authenticator(domain, clientId)
 
 class SessionState {
   authenticated = false;
-  authenticationPending = true;
+  authenticationPending = false;
   lastPath?: string;
   profile?: any;
 }
@@ -30,6 +30,9 @@ const authModule: Module<any, any> = {
     authenticationPending(state: SessionState) {
       state.authenticationPending = true;
     },
+    authenticationFailed(state: SessionState) {
+      state.authenticationPending = false;
+    },
     appStateRecovered(state: SessionState, appState: any) {
       state.lastPath = appState;
     },
@@ -50,7 +53,8 @@ const authModule: Module<any, any> = {
         return dispatch('login');
       }
     },
-    async login(context, appState?: string) {
+    async login({ commit }, appState?: string) {
+      commit('authenticationPending');
       return auth.login(appState);
     },
     logout({ commit }) {
@@ -62,12 +66,16 @@ const authModule: Module<any, any> = {
     },
     async handleAuthentication({ commit }) {
       commit('authenticationPending');
-      const appState = await auth.handleAuthentication();
-      const profile = await auth.userProfile();
-      if (appState !== undefined) {
-        commit('appStateRecovered', appState);
+      try {
+        const appState = await auth.handleAuthentication();
+        const profile = await auth.userProfile();
+        if (appState !== undefined) {
+          commit('appStateRecovered', appState);
+        }
+        commit('profileFetched', profile);
+      } catch {
+        commit('authenticationFailed');
       }
-      commit('profileFetched', profile);
     }
   }
 }
