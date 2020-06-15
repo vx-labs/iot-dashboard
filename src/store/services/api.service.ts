@@ -46,7 +46,7 @@ export class ApiClient {
         'Authorization': `Bearer ${token}`,
       }
     });
-    return (resp.data as Device[]);
+    return (resp.data as Device[]).sort((a, b) => a.name.localeCompare(b.name));
   }
   async listTopics(token: string): Promise<Topic[]> {
     const devices = await this.httpClient.get('/topics/', {
@@ -54,7 +54,7 @@ export class ApiClient {
         'Authorization': `Bearer ${token}`,
       }
     });
-    return (devices.data as Topic[]);
+    return (devices.data as Topic[]).sort((a, b) => a.name.localeCompare(b.name));
   }
   async getTopic(token: string, pattern: string): Promise<Record[]> {
     const resp = await this.httpClient.post('/topics/',
