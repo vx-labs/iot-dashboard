@@ -4,7 +4,6 @@
 
 <script lang="ts">
 import Vue from 'vue'
-import { mapActions } from "vuex";
 
 import DeviceList from '@/components/DeviceList.vue';
 export default Vue.extend({

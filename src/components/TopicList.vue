@@ -34,7 +34,7 @@
 <script lang="ts">
 import Vue from 'vue'
 import { mapGetters, mapActions } from 'vuex'
-import { Topic, Record } from '../store/types'
+import { Topic } from '../store/types'
 export default Vue.extend({
   name: 'deviceList',
   props: [
