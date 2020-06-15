@@ -1,5 +1,13 @@
 import { ApiClient } from './services/api.service';
-
+export interface Topic {
+  name: string;
+  messageCount: number;
+}
+export interface Record {
+  timestamp: number;
+  topic: string;
+  payload: string;
+}
 export interface Device {
   id: string;
   name: string;
