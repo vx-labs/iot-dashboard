@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import VueRouter, { RouteConfig, NavigationGuard } from 'vue-router'
 import Devices from '../views/Devices.vue'
+import Topics from '../views/Topics.vue'
 import Dashboard from '../views/Dashboard.vue'
 import Login from '../components/Login.vue'
 import About from '../views/About.vue'
@@ -30,6 +31,12 @@ const routes: Array<RouteConfig> = [
     path: '/devices/',
     name: 'Devices',
     component: Devices,
+    beforeEnter: requireAuth,
+  },
+  {
+    path: '/topics/',
+    name: 'Topics',
+    component: Topics,
     beforeEnter: requireAuth,
   },
   {

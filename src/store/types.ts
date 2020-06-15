@@ -25,6 +25,10 @@ class Api {
 }
 class Resources {
   owner = '';
+  topics: Topic[] = [
+    { name: 'devices/a', messageCount: 4 },
+    { name: 'devices/b', messageCount: 20 },
+  ];
   devices: Device[] = [
     /*{
       id: '1', name: 'sensor-1', createdAt: 0, active: true, password: '', connected: true, receivedBytes: 19, sentBytes: 98, subscriptionCount: 5,

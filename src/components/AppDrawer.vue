@@ -25,7 +25,13 @@
         <v-list-item-icon>
           <v-icon>mdi-devices</v-icon>
         </v-list-item-icon>
-        <v-list-item-title>My IoT Devices</v-list-item-title>
+        <v-list-item-title>IoT Devices</v-list-item-title>
+      </v-list-item>
+      <v-list-item link to="/topics/">
+        <v-list-item-icon>
+          <v-icon>mdi-share-variant</v-icon>
+        </v-list-item-icon>
+        <v-list-item-title>Message Topics</v-list-item-title>
       </v-list-item>
     </v-list>
     <template v-slot:append>
@@ -43,8 +49,5 @@ export default Vue.extend({
   computed: {
     ...mapGetters(["authenticated", "profile"])
   },
-  data: () => ({
-    items: [{ title: "Devices", "icon": "bug" }]
-  }),
 })
 </script>
