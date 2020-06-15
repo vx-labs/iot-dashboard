@@ -1,10 +1,18 @@
 <template>
   <v-card :dark="dark">
-    <v-data-table class="pa-4" :headers="headers" :items="devices">
+    <v-data-table class="pa-4" :search=search :headers="headers" :items="devices">
       <template v-slot:top>
         <v-toolbar dense flat :color="color">
           <v-toolbar-title>{{ title }}</v-toolbar-title>
           <v-spacer></v-spacer>
+          <v-spacer></v-spacer>
+          <v-text-field
+            v-model="search"
+            append-icon="mdi-magnify"
+            label="Search"
+            single-line
+            hide-details
+          ></v-text-field>
           <v-btn icon @click="refreshDevices">
             <v-icon>mdi-refresh</v-icon>
           </v-btn>
@@ -72,6 +80,7 @@ export default Vue.extend({
     ])
   },
   data: () => ({
+    search: null,
     dialog: false,
     headers: [
       { text: 'Status', value: 'humanStatus' },
