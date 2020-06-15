@@ -13,6 +13,8 @@ export default new Vuex.Store({
     owner(state) { return state.resources.owner },
     devices(state) { return state.resources.devices },
     topics(state) { return state.resources.topics },
+    selectedTopic(state) { return state.resources.selectedTopic },
+    selectedTopicRecords(state) { return state.resources.selectedTopicRecords },
   },
   mutations: {
     devicesLoaded(state, devices: Device[]) {
@@ -41,9 +43,25 @@ export default new Vuex.Store({
       if (idx > -1) {
         Vue.set(state.resources.devices, idx, Object.assign({}, state.resources.devices[idx], { password }))
       }
-    }
+    },
+    topicSelected(state, { topic }) {
+      state.resources.selectedTopic = topic;
+      state.resources.selectedTopicRecords = [];
+    },
+    selectedTopicRecordsFetched(state, { records }) {
+      state.resources.selectedTopicRecords = records;
+    },
   },
   actions: {
+    async refreshSelectedTopicRecords({ state, dispatch, commit }) {
+      const token = await dispatch('refreshToken', {}, { root: true });
+      const records = await state.api.client.getTopic(token, state.resources.selectedTopic);
+      commit('selectedTopicRecordsFetched', { records });
+    },
+    async selectTopic({ dispatch, commit }, topic: string) {
+      commit('topicSelected', { topic });
+      await dispatch('refreshSelectedTopicRecords');
+    },
     async refreshDevices({ state, dispatch, commit }) {
       const token = await dispatch('refreshToken', {}, { root: true });
       const devices = await state.api.client.listDevices(token)

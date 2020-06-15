@@ -66,7 +66,7 @@ export class ApiClient {
           'Authorization': `Bearer ${token}`,
         }
       });
-    return (resp.data as Record[]);
+    return (resp.data as Record[]).reverse();
   }
 
 }

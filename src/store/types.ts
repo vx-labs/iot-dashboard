@@ -25,11 +25,13 @@ class Api {
 }
 class Resources {
   owner = '';
+  selectedTopic = '';
+  selectedTopicRecords: Record[] = [];
   topics: Topic[] = [
-   /*
-    { name: 'devices/a', messageCount: 4 },
-    { name: 'devices/b', messageCount: 20 },
-    */
+    /*
+     { name: 'devices/a', messageCount: 4 },
+     { name: 'devices/b', messageCount: 20 },
+     */
   ];
   devices: Device[] = [
     /*{

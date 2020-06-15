@@ -1,5 +1,8 @@
 <template>
   <v-card :dark="dark">
+    <v-card-title>
+      Topics
+    </v-card-title>
     <v-card-text>
       <v-text-field
         v-model="search"
@@ -31,7 +34,7 @@
 <script lang="ts">
 import Vue from 'vue'
 import { mapGetters, mapActions } from 'vuex'
-import { Topic } from '../store/types'
+import { Topic, Record } from '../store/types'
 export default Vue.extend({
   name: 'deviceList',
   props: [
@@ -42,20 +45,25 @@ export default Vue.extend({
   computed: {
     ...mapGetters([
       'topics',
+      'selectedTopic'
     ]),
-    filteredTopics() {
+    filteredTopics(): Topic[] {
       return this.topics.filter((elt: Topic) =>
         this.search === null || this.search.length === 0 || elt.name.includes(this.search))
+    },
+    selected: {
+      get() { return (this.filteredTopics as Topic[]).findIndex((elt) => elt.name === this.selectedTopic); },
+      set(v: number) { this.selectTopic((this.filteredTopics as Topic[])[v].name) }
     }
   },
   methods: {
     ...mapActions([
       'refreshTopics',
+      'selectTopic'
     ])
   },
   data: () => ({
     search: '',
-    selected: null,
     dialog: false,
     headers: [
       { text: 'Name', value: 'name' },
