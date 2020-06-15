@@ -2,6 +2,8 @@ import { ApiClient } from './services/api.service';
 export interface Topic {
   name: string;
   messageCount: number;
+  sizeInBytes: number;
+  lastRecord?: Record;
 }
 export interface Record {
   timestamp: number;

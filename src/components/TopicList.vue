@@ -1,8 +1,6 @@
 <template>
   <v-card :dark="dark">
-    <v-card-title>
-      Topics
-    </v-card-title>
+    <v-card-title>Topics</v-card-title>
     <v-card-text>
       <v-text-field
         v-model="search"
@@ -18,8 +16,27 @@
               <template v-slot:default="{ }">
                 <v-list-item-content>
                   <v-list-item-title v-text="item.name"></v-list-item-title>
-                  <v-list-item-subtitle v-text="item.messageCount"></v-list-item-subtitle>
+                  <v-list-item-subtitle v-if="item.lastRecord !== undefined">
+                    Last message:
+                    &nbsp;
+                    <span v-if="item.lastRecord.payload !== undefined">
+                      <span
+                        v-if="item.lastRecord.payload.length < 30"
+                        class="text--primary"
+                      >{{item.lastRecord.payload}}</span>
+                      <span
+                        v-else
+                        class="text--primary"
+                      >{{item.lastRecord.payload.substring(0, 30)}}...</span>
+                    </span>
+                    &nbsp;
+                    <HumanTimestamp :timestamp="item.lastRecord.timestamp"></HumanTimestamp>
+                  </v-list-item-subtitle>
                 </v-list-item-content>
+                <v-list-item-action>
+                  <v-list-item-action-text>{{ item.messageCount }} Messages</v-list-item-action-text>
+                  <v-list-item-action-text>{{ item.sizeInBytes }} Bytes</v-list-item-action-text>
+                </v-list-item-action>
               </template>
             </v-list-item>
 
@@ -35,8 +52,10 @@
 import Vue from 'vue'
 import { mapGetters, mapActions } from 'vuex'
 import { Topic } from '../store/types'
+import HumanTimestamp from '@/components/HumanTimestamp.vue';
 export default Vue.extend({
-  name: 'deviceList',
+  name: 'topicList',
+  components: { HumanTimestamp },
   props: [
     'title',
     'color',

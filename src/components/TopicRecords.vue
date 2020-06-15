@@ -19,7 +19,9 @@
               >
                 <v-card outlined :dark="dark">
                   <v-card-title>{{ item.payload }}</v-card-title>
-                  <v-card-subtitle>{{ formatDate(item.timestamp) }}</v-card-subtitle>
+                  <v-card-subtitle>
+                    <HumanTimestamp :timestamp="item.timestamp"></HumanTimestamp>
+                  </v-card-subtitle>
                 </v-card>
               </v-timeline-item>
             </v-timeline>
@@ -49,10 +51,10 @@ import Vue from 'vue'
 import { mapGetters, mapActions } from 'vuex'
 import Timeline from '@/components/Timeline.vue';
 import TopicStats from '@/components/TopicStats.vue';
-import moment from 'moment';
+import HumanTimestamp from '@/components/HumanTimestamp.vue';
 export default Vue.extend({
   name: 'deviceList',
-  components: { Timeline, TopicStats },
+  components: { Timeline, TopicStats, HumanTimestamp },
   props: [
     'color',
     'dark',
@@ -68,9 +70,6 @@ export default Vue.extend({
     ...mapActions([
       'refreshSelectedTopicRecords',
     ]),
-    formatDate(timestamp: number): string {
-      return moment(timestamp / 1000000).fromNow();
-    }
   },
   data: () => ({
     tab: null,
