@@ -3,6 +3,7 @@ import Vuex from 'vuex'
 import { Device, MainState, Topic, Event } from './types'
 
 import session from './modules/session'
+import loader from './modules/loader'
 
 
 Vue.use(Vuex)
@@ -16,32 +17,20 @@ export default new Vuex.Store({
     events(state) { return state.resources.events },
     selectedTopic(state) { return state.resources.selectedTopic },
     selectedTopicRecords(state) { return state.resources.selectedTopicRecords },
-    areTopicsLoading(state) { return state.resources.loadingTopicList },
-    areDevicesLoading(state) { return state.resources.loadingDeviceList },
-    areEventsLoading(state) { return state.resources.loadingEventList },
-    isSelectedTopicRecordsLoading(state) { return state.resources.loadingSelectedTopic },
+    areTopicsLoading(state, getters) { return getters['topicList/isPending'] },
+    areDevicesLoading(state, getters) { return getters['deviceList/isPending'] },
+    areEventsLoading(state, getters) { return getters['eventList/isPending'] },
+    isSelectedTopicRecordsLoading(state, getters) { return getters['topicRecords/isPending'] },
   },
   mutations: {
-    devicesLoading(state) {
-      state.resources.loadingDeviceList = true;
-    },
     devicesLoaded(state, devices: Device[]) {
       state.resources.devices = devices;
-      state.resources.loadingDeviceList = false;
-    },
-    eventsLoading(state) {
-      state.resources.loadingDeviceList = true;
     },
     eventsLoaded(state, events: Event[]) {
       state.resources.events = events;
-      state.resources.loadingEventList = false;
-    },
-    topicsLoading(state) {
-      state.resources.loadingTopicList = true;
     },
     topicsLoaded(state, topics: Topic[]) {
       state.resources.topics = topics;
-      state.resources.loadingTopicList = false;
     },
     deviceDeleted(state, id: string) {
       state.resources.devices = state.resources.devices.filter(elt => elt.id !== id);
@@ -68,41 +57,35 @@ export default new Vuex.Store({
       state.resources.selectedTopic = topic;
       state.resources.selectedTopicRecords = [];
     },
-    selectedTopicRecordsLoading(state) {
-      state.resources.loadingSelectedTopic = true;
-    },
     selectedTopicRecordsFetched(state, { records }) {
       state.resources.selectedTopicRecords = records;
-      state.resources.loadingSelectedTopic = false;
     },
   },
   actions: {
-    resolveDeviceName({ state }, id: string): string {
-      const device = state.resources.devices.find((elt: Device) => elt.id === id);
-      if (device !== undefined) { return device.name }
-      return id;
-    },
     async refreshSelectedTopicRecords({ state, dispatch, commit }) {
-      commit('selectedTopicRecordsLoading');
-      const token = await dispatch('refreshToken', {}, { root: true });
-      const records = await state.api.client.getTopic(token, state.resources.selectedTopic);
-      commit('selectedTopicRecordsFetched', { records });
+      return dispatch('topicRecords/load', async () => {
+        const token = await dispatch('refreshToken', {}, { root: true });
+        const records = await state.api.client.getTopic(token, state.resources.selectedTopic);
+        commit('selectedTopicRecordsFetched', { records });
+      });
     },
     async selectTopic({ dispatch, commit }, topic: string) {
       commit('topicSelected', { topic });
       await dispatch('refreshSelectedTopicRecords');
     },
     async refreshDevices({ state, dispatch, commit }) {
-      commit('devicesLoading');
-      const token = await dispatch('refreshToken', {}, { root: true });
-      const devices = await state.api.client.listDevices(token)
-      commit('devicesLoaded', devices)
+      return dispatch('deviceList/load', async () => {
+        const token = await dispatch('refreshToken', {}, { root: true });
+        const devices = await state.api.client.listDevices(token);
+        commit('devicesLoaded', devices)
+      });
     },
     async refreshTopics({ state, dispatch, commit }) {
-      commit('topicsLoading');
-      const token = await dispatch('refreshToken', {}, { root: true });
-      const devices = await state.api.client.listTopics(token)
-      commit('topicsLoaded', devices)
+      return dispatch('topicList/load', async () => {
+        const token = await dispatch('refreshToken', {}, { root: true });
+        const devices = await state.api.client.listTopics(token)
+        commit('topicsLoaded', devices)
+      });
     },
     async deleteDevice({ commit, state, dispatch }, id: string) {
       const token = await dispatch('refreshToken', {}, { root: true });
@@ -123,13 +106,15 @@ export default new Vuex.Store({
       commit('devicePasswordChanged', { id, password });
     },
     async refreshEvents({ state, dispatch, commit }) {
-      commit('eventsLoading');
-      const token = await dispatch('refreshToken', {}, { root: true });
-      const events = await state.api.client.getEvents(token)
-      commit('eventsLoaded', events)
+      return dispatch('eventList/load', async () => {
+        const token = await dispatch('refreshToken', {}, { root: true });
+        const events = await state.api.client.getEvents(token)
+        commit('eventsLoaded', events)
+      });
     },
   },
   modules: {
     session,
+    loader,
   }
 })

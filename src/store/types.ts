@@ -34,10 +34,6 @@ class Api {
 }
 class Resources {
   owner = '';
-  loadingDeviceList = false;
-  loadingTopicList = false;
-  loadingEventList = false;
-  loadingSelectedTopic = false;
   selectedTopic = '';
   selectedTopicRecords: Record[] = [];
   topics: Topic[] = [
