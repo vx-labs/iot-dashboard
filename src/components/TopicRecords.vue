@@ -1,6 +1,15 @@
 <template>
   <v-card :dark="dark" :loading="isSelectedTopicRecordsLoading">
-    <v-card-title>Records in {{ selectedTopic }}</v-card-title>
+    <v-card-title>
+      <v-toolbar dense flat :color="color">
+        <v-toolbar-title>{{ selectedTopic }}</v-toolbar-title>
+        <v-spacer></v-spacer>
+        <v-spacer></v-spacer>
+        <v-btn icon @click="refreshSelectedTopicRecords">
+          <v-icon>mdi-refresh</v-icon>
+        </v-btn>
+      </v-toolbar>
+    </v-card-title>
     <v-tabs v-model="tab" grow>
       <v-tab>History</v-tab>
       <v-tab>Graph</v-tab>
