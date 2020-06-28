@@ -29,6 +29,7 @@ export default Vue.extend({
     this.handleAuthentication().then(() => {
       this.$store.dispatch('refreshDevices');
       this.$store.dispatch('refreshTopics');
+      this.$store.dispatch('refreshEvents');
       if (
         window.location.search.includes("code=")) {
         const lastPath = this.$store.getters.lastPath;

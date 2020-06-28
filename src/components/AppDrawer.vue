@@ -33,6 +33,12 @@
         </v-list-item-icon>
         <v-list-item-title>Message Topics</v-list-item-title>
       </v-list-item>
+      <v-list-item link to="/events/">
+        <v-list-item-icon>
+          <v-icon>mdi-history</v-icon>
+        </v-list-item-icon>
+        <v-list-item-title>Events</v-list-item-title>
+      </v-list-item>
     </v-list>
     <template v-slot:append>
       <AuthButton></AuthButton>

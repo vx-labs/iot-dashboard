@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import { Device, MainState, Topic } from './types'
+import { Device, MainState, Topic, Event } from './types'
 
 import session from './modules/session'
 
@@ -13,10 +13,12 @@ export default new Vuex.Store({
     owner(state) { return state.resources.owner },
     devices(state) { return state.resources.devices },
     topics(state) { return state.resources.topics },
+    events(state) { return state.resources.events },
     selectedTopic(state) { return state.resources.selectedTopic },
     selectedTopicRecords(state) { return state.resources.selectedTopicRecords },
     areTopicsLoading(state) { return state.resources.loadingTopicList },
     areDevicesLoading(state) { return state.resources.loadingDeviceList },
+    areEventsLoading(state) { return state.resources.loadingEventList },
     isSelectedTopicRecordsLoading(state) { return state.resources.loadingSelectedTopic },
   },
   mutations: {
@@ -26,6 +28,13 @@ export default new Vuex.Store({
     devicesLoaded(state, devices: Device[]) {
       state.resources.devices = devices;
       state.resources.loadingDeviceList = false;
+    },
+    eventsLoading(state) {
+      state.resources.loadingDeviceList = true;
+    },
+    eventsLoaded(state, events: Event[]) {
+      state.resources.events = events;
+      state.resources.loadingEventList = false;
     },
     topicsLoading(state) {
       state.resources.loadingTopicList = true;
@@ -68,6 +77,11 @@ export default new Vuex.Store({
     },
   },
   actions: {
+    resolveDeviceName({ state }, id: string): string {
+      const device = state.resources.devices.find((elt: Device) => elt.id === id);
+      if (device !== undefined) { return device.name }
+      return id;
+    },
     async refreshSelectedTopicRecords({ state, dispatch, commit }) {
       commit('selectedTopicRecordsLoading');
       const token = await dispatch('refreshToken', {}, { root: true });
@@ -107,7 +121,13 @@ export default new Vuex.Store({
     },
     async changeDevicePassword({ commit }, { id, password }) {
       commit('devicePasswordChanged', { id, password });
-    }
+    },
+    async refreshEvents({ state, dispatch, commit }) {
+      commit('eventsLoading');
+      const token = await dispatch('refreshToken', {}, { root: true });
+      const events = await state.api.client.getEvents(token)
+      commit('eventsLoaded', events)
+    },
   },
   modules: {
     session,

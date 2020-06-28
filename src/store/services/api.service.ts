@@ -1,5 +1,5 @@
 import axios, { AxiosInstance } from 'axios';
-import { Device, Topic, Record } from '../types';
+import { Device, Topic, Record, Event } from '../types';
 
 export class ApiClient {
   private httpClient: AxiosInstance;
@@ -67,6 +67,17 @@ export class ApiClient {
         }
       });
     return (resp.data as Record[]).reverse();
+  }
+  async getEvents(token: string): Promise<Event[]> {
+    const resp = await this.httpClient.post('/events/',
+      {
+      },
+      {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        }
+      });
+    return (resp.data as Event[]).reverse();
   }
 
 }

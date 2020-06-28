@@ -11,6 +11,12 @@ export interface Record {
   payload: string;
   publisher: string;
 }
+export interface Event {
+  timestamp: number;
+  kind: string;
+  service: string;
+  attributes: { [name: string]: string };
+}
 export interface Device {
   id: string;
   name: string;
@@ -30,15 +36,28 @@ class Resources {
   owner = '';
   loadingDeviceList = false;
   loadingTopicList = false;
+  loadingEventList = false;
   loadingSelectedTopic = false;
   selectedTopic = '';
   selectedTopicRecords: Record[] = [];
   topics: Topic[] = [
     /*
-     { name: 'devices/a', messageCount: 4 },
+     { name: 'devices/a', messageCount:s 4 },
      { name: 'devices/b', messageCount: 20 },
      */
   ];
+  events: Event[] = [
+    /* {
+       service: "wasp", kind: "session_connected", timestamp: 0, attributes: {
+         "session_id": "1"
+       }
+     },
+     {
+       service: "wasp", kind: "session_disconnected", timestamp: 10, attributes: {
+         "session_id": "1"
+       }
+     },*/
+  ]
   devices: Device[] = [
     /*{
       id: '1', name: 'sensor-1', createdAt: 0, active: true, password: '', connected: true, receivedBytes: 19, sentBytes: 98, subscriptionCount: 5,
