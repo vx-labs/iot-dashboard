@@ -1,6 +1,6 @@
 <template>
-  <v-card :dark="dark">
-    <v-data-table class="pa-4" :search=search :headers="headers" :items="devices">
+  <v-card :dark="dark" :loading="areDevicesLoading">
+    <v-data-table class="pa-4" :search="search" :headers="headers" :items="devices">
       <template v-slot:top>
         <v-toolbar dense flat :color="color">
           <v-toolbar-title>{{ title }}</v-toolbar-title>
@@ -69,6 +69,7 @@ export default Vue.extend({
   computed: {
     ...mapGetters([
       'devices',
+      'areDevicesLoading'
     ])
   },
   methods: {

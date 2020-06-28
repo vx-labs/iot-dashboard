@@ -27,6 +27,7 @@ class Api {
 }
 class Resources {
   owner = '';
+  loadingDeviceList = false;
   loadingTopicList = false;
   loadingSelectedTopic = false;
   selectedTopic = '';

@@ -16,11 +16,16 @@ export default new Vuex.Store({
     selectedTopic(state) { return state.resources.selectedTopic },
     selectedTopicRecords(state) { return state.resources.selectedTopicRecords },
     areTopicsLoading(state) { return state.resources.loadingTopicList },
+    areDevicesLoading(state) { return state.resources.loadingDeviceList },
     isSelectedTopicRecordsLoading(state) { return state.resources.loadingSelectedTopic },
   },
   mutations: {
+    devicesLoading(state) {
+      state.resources.loadingDeviceList = true;
+    },
     devicesLoaded(state, devices: Device[]) {
       state.resources.devices = devices;
+      state.resources.loadingDeviceList = false;
     },
     topicsLoading(state) {
       state.resources.loadingTopicList = true;
@@ -74,6 +79,7 @@ export default new Vuex.Store({
       await dispatch('refreshSelectedTopicRecords');
     },
     async refreshDevices({ state, dispatch, commit }) {
+      commit('devicesLoading');
       const token = await dispatch('refreshToken', {}, { root: true });
       const devices = await state.api.client.listDevices(token)
       commit('devicesLoaded', devices)
