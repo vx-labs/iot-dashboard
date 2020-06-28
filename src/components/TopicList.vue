@@ -1,5 +1,5 @@
 <template>
-  <v-card :dark="dark">
+  <v-card :dark="dark" :loading="areTopicsLoading">
     <v-card-title>Topics</v-card-title>
     <v-card-text>
       <v-text-field
@@ -64,7 +64,8 @@ export default Vue.extend({
   computed: {
     ...mapGetters([
       'topics',
-      'selectedTopic'
+      'selectedTopic',
+      'areTopicsLoading'
     ]),
     filteredTopics(): Topic[] {
       return this.topics.filter((elt: Topic) =>

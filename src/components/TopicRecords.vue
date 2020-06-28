@@ -1,5 +1,5 @@
 <template>
-  <v-card :dark="dark">
+  <v-card :dark="dark" :loading="isSelectedTopicRecordsLoading">
     <v-card-title>Records in {{ selectedTopic }}</v-card-title>
     <v-tabs v-model="tab" grow>
       <v-tab>History</v-tab>
@@ -64,6 +64,7 @@ export default Vue.extend({
       'topics',
       'selectedTopic',
       'selectedTopicRecords',
+      'isSelectedTopicRecordsLoading'
     ]),
   },
   methods: {

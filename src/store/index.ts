@@ -15,13 +15,19 @@ export default new Vuex.Store({
     topics(state) { return state.resources.topics },
     selectedTopic(state) { return state.resources.selectedTopic },
     selectedTopicRecords(state) { return state.resources.selectedTopicRecords },
+    areTopicsLoading(state) { return state.resources.loadingTopicList },
+    isSelectedTopicRecordsLoading(state) { return state.resources.loadingSelectedTopic },
   },
   mutations: {
     devicesLoaded(state, devices: Device[]) {
       state.resources.devices = devices;
     },
+    topicsLoading(state) {
+      state.resources.loadingTopicList = true;
+    },
     topicsLoaded(state, topics: Topic[]) {
       state.resources.topics = topics;
+      state.resources.loadingTopicList = false;
     },
     deviceDeleted(state, id: string) {
       state.resources.devices = state.resources.devices.filter(elt => elt.id !== id);
@@ -48,12 +54,17 @@ export default new Vuex.Store({
       state.resources.selectedTopic = topic;
       state.resources.selectedTopicRecords = [];
     },
+    selectedTopicRecordsLoading(state) {
+      state.resources.loadingSelectedTopic = true;
+    },
     selectedTopicRecordsFetched(state, { records }) {
       state.resources.selectedTopicRecords = records;
+      state.resources.loadingSelectedTopic = false;
     },
   },
   actions: {
     async refreshSelectedTopicRecords({ state, dispatch, commit }) {
+      commit('selectedTopicRecordsLoading');
       const token = await dispatch('refreshToken', {}, { root: true });
       const records = await state.api.client.getTopic(token, state.resources.selectedTopic);
       commit('selectedTopicRecordsFetched', { records });
@@ -68,6 +79,7 @@ export default new Vuex.Store({
       commit('devicesLoaded', devices)
     },
     async refreshTopics({ state, dispatch, commit }) {
+      commit('topicsLoading');
       const token = await dispatch('refreshToken', {}, { root: true });
       const devices = await state.api.client.listTopics(token)
       commit('topicsLoaded', devices)
