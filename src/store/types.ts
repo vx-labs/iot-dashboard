@@ -9,6 +9,7 @@ export interface Record {
   timestamp: number;
   topic: string;
   payload: string;
+  publisher: string;
 }
 export interface Device {
   id: string;

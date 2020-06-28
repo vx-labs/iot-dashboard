@@ -8,25 +8,33 @@
     </v-tabs>
     <v-tabs-items v-model="tab">
       <v-tab-item>
-        <v-card flat>
-          <v-card-text>
-            <v-timeline dense v-if="selectedTopicRecords.length > 0">
-              <v-timeline-item
-                fill-dot
-                small
-                v-for="(item, key) in selectedTopicRecords"
-                :key="key"
-              >
-                <v-card outlined :dark="dark">
-                  <v-card-title>{{ item.payload }}</v-card-title>
-                  <v-card-subtitle>
-                    <HumanTimestamp :timestamp="item.timestamp"></HumanTimestamp>
-                  </v-card-subtitle>
-                </v-card>
-              </v-timeline-item>
-            </v-timeline>
-          </v-card-text>
-        </v-card>
+        <v-data-table
+          hide-default-header
+          class="pa-4"
+          :headers="headers"
+          :items="selectedTopicRecords"
+        >
+          <template v-slot:item.humanRecords="{ item }">
+            <v-list-item>
+              <v-list-item-content>
+                <v-list-item-title v-text="item.payload"></v-list-item-title>
+                <v-list-item-subtitle v-if="devices.length > 0">
+                  Published by:
+                  &nbsp;
+                  <span
+                    class="text--primary"
+                  >{{ resolveDeviceName(item.publisher) }}</span>
+                </v-list-item-subtitle>
+              </v-list-item-content>
+              <v-list-item-action>
+                <v-list-item-action-text>
+                  <HumanTimestamp :timestamp="item.timestamp"></HumanTimestamp>
+                </v-list-item-action-text>
+                <v-list-item-action-text>{{ item.payload.length }} Bytes</v-list-item-action-text>
+              </v-list-item-action>
+            </v-list-item>
+          </template>
+        </v-data-table>
       </v-tab-item>
       <v-tab-item>
         <v-card flat>
@@ -52,6 +60,7 @@ import { mapGetters, mapActions } from 'vuex'
 import Timeline from '@/components/Timeline.vue';
 import TopicStats from '@/components/TopicStats.vue';
 import HumanTimestamp from '@/components/HumanTimestamp.vue';
+import { Device } from '../store/types';
 export default Vue.extend({
   name: 'deviceList',
   components: { Timeline, TopicStats, HumanTimestamp },
@@ -64,13 +73,19 @@ export default Vue.extend({
       'topics',
       'selectedTopic',
       'selectedTopicRecords',
-      'isSelectedTopicRecordsLoading'
+      'isSelectedTopicRecordsLoading',
+      'devices'
     ]),
   },
   methods: {
     ...mapActions([
       'refreshSelectedTopicRecords',
     ]),
+    resolveDeviceName(id: string): string {
+      const device = this.devices.find((elt: Device) => elt.id === id);
+      if (device !== undefined) { return device.name }
+      return 'Unavailable';
+    }
   },
   data: () => ({
     tab: null,
@@ -78,10 +93,9 @@ export default Vue.extend({
     selected: null,
     dialog: false,
     headers: [
-      { text: 'Name', value: 'name' },
-      { text: 'Message count', value: 'messageCount' },
-      { text: 'Actions', value: 'actions', sortable: false },
+      { text: 'Records', value: 'humanRecords' },
     ]
+
   })
 })
 </script>

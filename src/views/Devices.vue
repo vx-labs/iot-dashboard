@@ -9,10 +9,5 @@ import DeviceList from '@/components/DeviceList.vue';
 export default Vue.extend({
   name: 'Devices',
   components: { DeviceList },
-  mounted() {
-    this.$nextTick(async () => {
-      this.$store.dispatch('refreshDevices');
-    });
-  },
 });
 </script>

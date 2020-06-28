@@ -26,10 +26,5 @@ export default Vue.extend({
       'selectedTopic',
     ]),
   },
-  mounted() {
-    this.$nextTick(async () => {
-      this.$store.dispatch('refreshTopics');
-    });
-  },
 });
 </script>

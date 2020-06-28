@@ -6,11 +6,11 @@
       <v-toolbar-title>🐝</v-toolbar-title>
     </v-app-bar>
 
-    <v-content>
+    <v-main>
       <v-container fluid>
         <router-view></router-view>
       </v-container>
-    </v-content>
+    </v-main>
     <v-footer app></v-footer>
   </v-app>
 </template>
@@ -27,6 +27,8 @@ export default Vue.extend({
   },
   mounted() {
     this.handleAuthentication().then(() => {
+      this.$store.dispatch('refreshDevices');
+      this.$store.dispatch('refreshTopics');
       if (
         window.location.search.includes("code=")) {
         const lastPath = this.$store.getters.lastPath;
