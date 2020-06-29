@@ -17,6 +17,7 @@ export default Vue.extend({
     ]),
     buckets() {
       return (this.selectedTopicRecords as Record[])
+        .reverse()
         .reduce((buckets: Record[][], cur: Record): Record[][] => {
           if (buckets.length == 0) {
             buckets.push([cur]);
@@ -38,6 +39,16 @@ export default Vue.extend({
     sizeRate() {
       return (this.buckets as Record[][])
         .map((elt: Record[]) => elt.reduce((a, b) => a + b.payload.length, 0));
+    },
+    publishersRate() {
+      return (this.buckets as Record[][])
+        .map((elt: Record[]) => elt.reduce((a: string[], b: Record) => {
+          if (!a.includes(b.publisher)) {
+            a.push(b.publisher);
+          }
+          return a;
+        }, []))
+        .map((elt: string[]) => elt.length);
     },
   },
 })

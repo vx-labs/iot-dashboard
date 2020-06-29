@@ -19,6 +19,8 @@
       <v-tab-item>
         <v-data-table
           hide-default-header
+          sort-by="timestamp"
+          sort-desc
           class="pa-4"
           :headers="headers"
           :items="selectedTopicRecords"
