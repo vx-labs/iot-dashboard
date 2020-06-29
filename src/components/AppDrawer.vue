@@ -41,19 +41,21 @@
       </v-list-item>
     </v-list>
     <template v-slot:append>
+      <NightModeSelector></NightModeSelector>
       <MQTTStatus></MQTTStatus>
       <AuthButton></AuthButton>
     </template>
   </v-navigation-drawer>
 </template>
 <script lang="ts">
+import NightModeSelector from "@/components/NightModeSelector.vue";
 import MQTTStatus from "@/components/MQTTStatus.vue";
 import AuthButton from "@/components/AuthButton.vue";
 import { mapGetters } from 'vuex'
 
 import Vue from 'vue'
 export default Vue.extend({
-  components: { AuthButton, MQTTStatus },
+  components: { AuthButton, MQTTStatus, NightModeSelector },
   computed: {
     ...mapGetters(["authenticated", "profile"])
   },
