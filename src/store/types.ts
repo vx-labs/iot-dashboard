@@ -20,12 +20,6 @@ export interface Event {
   service: string;
   attributes: { [name: string]: string };
 }
-export interface MQTTEvent {
-  timestamp: number;
-  event_kind: string;
-  service: string;
-  session_id?: string;
-}
 export interface CreateDeviceRequest {
   name: string;
   password: string;

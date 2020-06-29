@@ -30,6 +30,9 @@ export default new Vuex.Store({
     eventsLoaded(state, events: Event[]) {
       state.resources.events = events;
     },
+    eventAppended(state, event: Event) {
+      state.resources.events.push(event);
+    },
     topicsLoaded(state, topics: Topic[]) {
       state.resources.topics = topics;
     },

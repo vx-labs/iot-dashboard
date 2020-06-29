@@ -1,6 +1,6 @@
 import Authenticator from '@/store/services/auth.service'
 import { domain, clientId } from "../../../auth_config.json";
-import { ActionContext, ActionTree, Module } from 'vuex';
+import { Module } from 'vuex';
 
 const auth = new Authenticator(domain, clientId)
 

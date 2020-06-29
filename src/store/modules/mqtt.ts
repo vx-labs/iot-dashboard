@@ -1,6 +1,6 @@
 import { Module } from 'vuex';
 import { connect } from 'mqtt';
-import { Device, MQTTEvent } from '../types';
+import { Device, Event } from '../types';
 class MqttState {
   connected = false;
   clientId = 'web-console'
@@ -39,25 +39,25 @@ const NewMQTTModule = (): Module<any, any> => ({
         });
         client.on('message', (topic, message) => {
           if (topic === '$SYS/_audit/events') {
-            const event: MQTTEvent = JSON.parse(message.toString("utf-8"));
+            const event: Event = JSON.parse(message.toString("utf-8"));
             console.log(event);
             switch (event.service) {
               default: {
-                switch (event.event_kind) {
+                switch (event.kind) {
                   case 'session_connected': {
-                    commit('deviceConnected', event.session_id);
+                    commit('deviceConnected', event.attributes.session_id);
                     break;
                   }
                   case 'session_disconnected': {
-                    commit('deviceDisconnected', event.session_id);
+                    commit('deviceDisconnected', event.attributes.session_id);
                     break;
                   }
                   case 'subscription_created': {
-                    commit('deviceSubscribed', event.session_id);
+                    commit('deviceSubscribed', event.attributes.session_id);
                     break;
                   }
                   case 'subscription_deleted': {
-                    commit('deviceUnsubscribed', event.session_id);
+                    commit('deviceUnsubscribed', event.attributes.session_id);
                     break;
                   }
                 }
