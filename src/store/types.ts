@@ -78,4 +78,5 @@ class Resources {
 export class MainState {
   api = new Api();
   resources = new Resources();
+  now = new Date();
 }

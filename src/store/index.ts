@@ -10,10 +10,10 @@ import NewMQTTModule from './modules/mqtt'
 Vue.use(Vuex)
 
 const maxEvents = 500;
-
-export default new Vuex.Store({
+const store = new Vuex.Store({
   state: new MainState(),
   getters: {
+    now(state) { return state.now },
     owner(state) { return state.resources.owner },
     devices(state) { return state.resources.devices },
     topics(state) { return state.resources.topics; },
@@ -26,6 +26,9 @@ export default new Vuex.Store({
     isSelectedTopicRecordsLoading(state, getters) { return getters['topicRecords/isPending'] },
   },
   mutations: {
+    timeTicked(state, now: Date) {
+      state.now = now;
+    },
     devicesLoaded(state, devices: Device[]) {
       state.resources.devices = devices;
     },
@@ -159,3 +162,7 @@ export default new Vuex.Store({
     mqtt: NewMQTTModule(),
   }
 })
+
+setInterval(() => store.commit('timeTicked', new Date()), 5000);
+
+export default store;
