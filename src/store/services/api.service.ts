@@ -89,7 +89,7 @@ export class ApiClient {
           'Authorization': `Bearer ${token}`,
         }
       });
-    return (resp.data as Record[]).reverse();
+    return (resp.data as Record[]);
   }
   async getEvents(token: string): Promise<Event[]> {
     const resp = await this.httpClient.post('/events/',
@@ -100,7 +100,7 @@ export class ApiClient {
           'Authorization': `Bearer ${token}`,
         }
       });
-    return (resp.data as Event[]).reverse();
+    return (resp.data as Event[])
   }
 
 }

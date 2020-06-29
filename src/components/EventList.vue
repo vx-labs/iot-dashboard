@@ -1,6 +1,6 @@
 <template>
   <v-card :dark="dark" :loading="areEventsLoading">
-    <v-data-table class="pa-4" :headers="headers" :items="events">
+    <v-data-table class="pa-4" sort-by="timestamp" sort-desc :headers="headers" :items="events" item-key="timestamp">
       <template v-slot:top>
         <v-toolbar dense flat :color="color">
           <v-toolbar-title>{{ title }}</v-toolbar-title>
@@ -72,10 +72,8 @@ export default Vue.extend({
     },
   },
   data: () => ({
-    search: null,
-    dialog: false,
     headers: [
-      { text: 'Timestamp', value: 'timestamp' },
+      { text: 'Timestamp', value: 'timestamp', width: 250 },
       { text: 'Action', value: 'actions' },
     ]
   })

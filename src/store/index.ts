@@ -9,13 +9,15 @@ import NewMQTTModule from './modules/mqtt'
 
 Vue.use(Vuex)
 
+const maxEvents = 500;
+
 export default new Vuex.Store({
   state: new MainState(),
   getters: {
     owner(state) { return state.resources.owner },
     devices(state) { return state.resources.devices },
-    topics(state) { return state.resources.topics },
-    events(state) { return state.resources.events },
+    topics(state) { return state.resources.topics; },
+    events(state) { return state.resources.events; },
     selectedTopic(state) { return state.resources.selectedTopic },
     selectedTopicRecords(state) { return state.resources.selectedTopicRecords },
     areTopicsLoading(state, getters) { return getters['topicList/isPending'] },
@@ -28,10 +30,16 @@ export default new Vuex.Store({
       state.resources.devices = devices;
     },
     eventsLoaded(state, events: Event[]) {
+      if (events.length > maxEvents) {
+        events = events.slice(events.length - maxEvents, events.length)
+      }
       state.resources.events = events;
     },
     eventAppended(state, event: Event) {
       state.resources.events.push(event);
+      if (state.resources.events.length > maxEvents) {
+        state.resources.events = state.resources.events.slice(state.resources.events.length - maxEvents, state.resources.events.length)
+      }
     },
     topicsLoaded(state, topics: Topic[]) {
       state.resources.topics = topics;
