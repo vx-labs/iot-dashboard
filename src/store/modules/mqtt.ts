@@ -40,7 +40,6 @@ const NewMQTTModule = (): Module<any, any> => ({
         client.on('message', (topic, message) => {
           if (topic === '$SYS/_audit/events') {
             const event: Event = JSON.parse(message.toString("utf-8"));
-            console.log(event);
             commit('eventAppended', event);
             switch (event.service) {
               case 'vespiary': {
@@ -65,6 +64,8 @@ const NewMQTTModule = (): Module<any, any> => ({
                     commit('devicePasswordChanged', { id: event.attributes.device_id, password: '' });
                     break;
                   }
+                  default:
+                    console.log(event);
                 }
                 break;
               }
@@ -86,6 +87,8 @@ const NewMQTTModule = (): Module<any, any> => ({
                     commit('deviceUnsubscribed', event.attributes.session_id);
                     break;
                   }
+                  default:
+                    console.log(event);
                 }
               }
             }
