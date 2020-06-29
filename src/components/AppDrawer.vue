@@ -6,7 +6,7 @@
           <v-img :src="profile.picture"></v-img>
         </v-list-item-avatar>
         <v-list-item-content>
-          <v-list-item-title>{{ profile.given_name}} {{ profile.family_name}}</v-list-item-title>
+          <v-list-item-title>{{ profile.given_name}} {{ profile.family_name.toUpperCase()}}</v-list-item-title>
           <v-list-item-subtitle>{{ profile.email}}</v-list-item-subtitle>
         </v-list-item-content>
       </v-list-item>

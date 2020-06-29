@@ -32,9 +32,7 @@
                 <v-list-item-subtitle v-if="devices.length > 0">
                   Published by:
                   &nbsp;
-                  <span
-                    class="text--primary"
-                  >{{ resolveDeviceName(item.publisher) }}</span>
+                  <span>{{ resolveDeviceName(item.publisher) }}</span>
                 </v-list-item-subtitle>
               </v-list-item-content>
               <v-list-item-action>

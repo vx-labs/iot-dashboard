@@ -36,11 +36,8 @@
                 <span
                   v-if="item.lastRecord.payload !== undefined"
                 >
-                  <span
-                    v-if="item.lastRecord.payload.length < 30"
-                    class="text--primary"
-                  >{{item.lastRecord.payload}}</span>
-                  <span v-else class="text--primary">{{item.lastRecord.payload.substring(0, 30)}}...</span>
+                  <span v-if="item.lastRecord.payload.length < 30">{{item.lastRecord.payload}}</span>
+                  <span v-else>{{item.lastRecord.payload.substring(0, 30)}}...</span>
                 </span>
                 &nbsp;
                 <HumanTimestamp :timestamp="item.lastRecord.timestamp"></HumanTimestamp>
