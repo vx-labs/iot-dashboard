@@ -40,7 +40,7 @@ const NewMQTTModule = (): Module<any, any> => ({
         client.on('message', (topic, message) => {
           if (topic === '$SYS/_audit/events') {
             const event: Event = JSON.parse(message.toString("utf-8"));
-            console.log(event);
+            commit('eventAppended', event);
             switch (event.service) {
               default: {
                 switch (event.kind) {
