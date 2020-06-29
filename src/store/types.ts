@@ -1,4 +1,7 @@
 import { ApiClient } from './services/api.service';
+export interface AccountInformations {
+  username: string;
+}
 export interface Topic {
   name: string;
   messageCount: number;
@@ -16,6 +19,17 @@ export interface Event {
   kind: string;
   service: string;
   attributes: { [name: string]: string };
+}
+export interface MQTTEvent {
+  timestamp: number;
+  event_kind: string;
+  service: string;
+  session_id?: string;
+}
+export interface CreateDeviceRequest {
+  name: string;
+  password: string;
+  active: boolean;
 }
 export interface Device {
   id: string;

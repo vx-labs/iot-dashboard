@@ -25,11 +25,14 @@ export default Vue.extend({
   methods: {
     ...mapActions(["handleAuthentication"])
   },
-  mounted() {
-    this.handleAuthentication().then(() => {
-      this.$store.dispatch('refreshDevices');
-      this.$store.dispatch('refreshTopics');
-      this.$store.dispatch('refreshEvents');
+  async mounted() {
+    await this.handleAuthentication();
+
+    if (this.$store.getters.authenticated) {
+      await this.$store.dispatch('refreshDevices');
+      await this.$store.dispatch('refreshTopics');
+      await this.$store.dispatch('refreshEvents');
+      await this.$store.dispatch('startMQTTClient');
       if (
         window.location.search.includes("code=")) {
         const lastPath = this.$store.getters.lastPath;
@@ -39,7 +42,9 @@ export default Vue.extend({
           this.$router.replace(window.location.pathname);
         }
       }
-    })
+    } else {
+      console.log('auth failed')
+    }
   },
 });
 </script>

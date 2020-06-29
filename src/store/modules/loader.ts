@@ -37,6 +37,7 @@ const Loaders: Module<any, any> = {
     'topicList': NewLoaderModule(),
     'topicRecords': NewLoaderModule(),
     'eventList': NewLoaderModule(),
+    'mqtt': NewLoaderModule(),
   }
 }
 export default Loaders;

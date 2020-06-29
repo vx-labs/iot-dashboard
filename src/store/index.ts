@@ -1,9 +1,10 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import { Device, MainState, Topic, Event } from './types'
+import { Device, MainState, Topic, Event, CreateDeviceRequest } from './types'
 
 import session from './modules/session'
 import loader from './modules/loader'
+import NewMQTTModule from './modules/mqtt'
 
 
 Vue.use(Vuex)
@@ -39,6 +40,30 @@ export default new Vuex.Store({
       const idx = state.resources.devices.findIndex(elt => elt.id === id);
       if (idx > -1) {
         Vue.set(state.resources.devices, idx, Object.assign({}, state.resources.devices[idx], { active: true }))
+      }
+    },
+    deviceConnected(state, id: string) {
+      const idx = state.resources.devices.findIndex(elt => elt.id === id);
+      if (idx > -1) {
+        Vue.set(state.resources.devices, idx, Object.assign({}, state.resources.devices[idx], { connected: true }))
+      }
+    },
+    deviceSubscribed(state, id: string) {
+      const idx = state.resources.devices.findIndex(elt => elt.id === id);
+      if (idx > -1) {
+        Vue.set(state.resources.devices, idx, Object.assign({}, state.resources.devices[idx], { subscriptionCount: state.resources.devices[idx].subscriptionCount + 1 }))
+      }
+    },
+    deviceUnsubscribed(state, id: string) {
+      const idx = state.resources.devices.findIndex(elt => elt.id === id);
+      if (idx > -1) {
+        Vue.set(state.resources.devices, idx, Object.assign({}, state.resources.devices[idx], { subscriptionCount: state.resources.devices[idx].subscriptionCount - 1 }))
+      }
+    },
+    deviceDisconnected(state, id: string) {
+      const idx = state.resources.devices.findIndex(elt => elt.id === id);
+      if (idx > -1) {
+        Vue.set(state.resources.devices, idx, Object.assign({}, state.resources.devices[idx], { connected: false }))
       }
     },
     deviceDisabled(state, id: string) {
@@ -87,6 +112,10 @@ export default new Vuex.Store({
         commit('topicsLoaded', devices)
       });
     },
+    async createDevice({ state, dispatch }, input: CreateDeviceRequest) {
+      const token = await dispatch('refreshToken', {}, { root: true });
+      await state.api.client.createDevice(token, input);
+    },
     async deleteDevice({ commit, state, dispatch }, id: string) {
       const token = await dispatch('refreshToken', {}, { root: true });
       await state.api.client.deleteDevice(token, id)
@@ -116,5 +145,6 @@ export default new Vuex.Store({
   modules: {
     session,
     loader,
+    mqtt: NewMQTTModule(),
   }
 })
