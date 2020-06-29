@@ -41,17 +41,19 @@
       </v-list-item>
     </v-list>
     <template v-slot:append>
+      <MQTTStatus></MQTTStatus>
       <AuthButton></AuthButton>
     </template>
   </v-navigation-drawer>
 </template>
 <script lang="ts">
+import MQTTStatus from "@/components/MQTTStatus.vue";
 import AuthButton from "@/components/AuthButton.vue";
 import { mapGetters } from 'vuex'
 
 import Vue from 'vue'
 export default Vue.extend({
-  components: { AuthButton },
+  components: { AuthButton, MQTTStatus },
   computed: {
     ...mapGetters(["authenticated", "profile"])
   },

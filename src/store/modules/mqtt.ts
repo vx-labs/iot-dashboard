@@ -3,6 +3,8 @@ import { connect } from 'mqtt';
 import { Device, Event } from '../types';
 class MqttState {
   connected = false;
+  connecting = false;
+  offlineReason = '';
   clientId = 'web-console'
 }
 
@@ -10,8 +12,13 @@ class MqttState {
 const NewMQTTModule = (): Module<any, any> => ({
   state: new MqttState(),
   getters: {
+    isMQTTConnected(state) { return state.connected },
+    isMQTTConnecting(state) { return state.connecting },
   },
   mutations: {
+    mqttConnected(state) { state.connecting = false; state.connected = true; },
+    mqttConnecting(state) { state.connected = false; state.connecting = true; },
+    mqttDisconnected(state, reason: string) { state.offlineReason = reason; state.connected = false; },
   },
   actions: {
     async startMQTTClient({ commit, state, getters, dispatch }) {
@@ -27,6 +34,7 @@ const NewMQTTModule = (): Module<any, any> => ({
       await this.dispatch('createDevice', { name: state.clientId, active: true, password: password })
 
       return this.dispatch('mqtt/load', async () => new Promise((resolve, reject) => {
+        commit('mqttConnecting');
         const client = connect('wss://broker.iot.cloud.vx-labs.net:443/mqtt', {
           connectTimeout: 3 * 1000,
           protocolId: 'MQIsdp',
@@ -98,13 +106,16 @@ const NewMQTTModule = (): Module<any, any> => ({
           client.subscribe('$SYS/_audit/events', { qos: 1 }, (err) => {
             if (err === null) {
               dispatch('refreshState');
+              commit('mqttConnected');
               resolve();
             } else {
               reject(err);
             }
           })
         });
-        client.on('error', (err) => reject(err));
+        client.on('error', (err) => commit('mqttDisconnected', err) );
+        client.on('reconnect', () => { commit('mqttConnecting') });
+        client.on('disconnect', () => { commit('mqttDisconnected', 'Broker ask us to disconnect') });
       }));
     },
   },
