@@ -27,12 +27,15 @@ export default Vue.extend({
   },
   async mounted() {
     await this.handleAuthentication();
-
     if (this.$store.getters.authenticated) {
-      await this.$store.dispatch('refreshDevices');
-      await this.$store.dispatch('refreshTopics');
-      await this.$store.dispatch('refreshEvents');
-      await this.$store.dispatch('startMQTTClient');
+      async () => {
+        await Promise.all([
+          this.$store.dispatch('refreshDevices'),
+          this.$store.dispatch('refreshTopics'),
+          this.$store.dispatch('refreshEvents'),
+        ]);
+        this.$store.dispatch('startMQTTClient');
+      };
       if (
         window.location.search.includes("code=")) {
         const lastPath = this.$store.getters.lastPath;
