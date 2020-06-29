@@ -32,6 +32,15 @@ export class ApiClient {
         }
       });
   }
+  async getDevice(token: string, id: string): Promise<Device> {
+    const resp = await this.httpClient.get(`/devices/${id}`,
+      {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        }
+      });
+    return (resp.data as Device);
+  }
   async enableDevice(token: string, id: string): Promise<void> {
     return this.httpClient.patch(`/devices/${id}`,
       {

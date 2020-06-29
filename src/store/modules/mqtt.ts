@@ -43,6 +43,31 @@ const NewMQTTModule = (): Module<any, any> => ({
             console.log(event);
             commit('eventAppended', event);
             switch (event.service) {
+              case 'vespiary': {
+                switch (event.kind) {
+                  case 'device_created': {
+                    dispatch('expandNewDevice', event.attributes.device_id);
+                    break;
+                  }
+                  case 'device_deleted': {
+                    commit('deviceDeleted', event.attributes.device_id);
+                    break;
+                  }
+                  case 'device_enabled': {
+                    commit('deviceEnabled', event.attributes.device_id);
+                    break;
+                  }
+                  case 'device_disabled': {
+                    commit('deviceDisabled', event.attributes.device_id);
+                    break;
+                  }
+                  case 'device_password_changed': {
+                    commit('devicePasswordChanged', { id: event.attributes.device_id, password: '' });
+                    break;
+                  }
+                }
+                break;
+              }
               default: {
                 switch (event.kind) {
                   case 'session_connected': {

@@ -47,6 +47,13 @@ const store = new Vuex.Store({
     topicsLoaded(state, topics: Topic[]) {
       state.resources.topics = topics;
     },
+    deviceCreated(state, device: Device) {
+      const idx = state.resources.devices.findIndex(elt => elt.id === device.id);
+      if (idx > -1) {
+        state.resources.devices.push(device);
+        state.resources.devices.sort();
+      }
+    },
     deviceDeleted(state, id: string) {
       state.resources.devices = state.resources.devices.filter(elt => elt.id !== id);
     },
@@ -101,6 +108,11 @@ const store = new Vuex.Store({
     },
   },
   actions: {
+    async expandNewDevice({ state, dispatch, commit }, id: string) {
+      const token = await dispatch('refreshToken', {}, { root: true });
+      const device = await state.api.client.getDevice(token, id);
+      commit('deviceCreated', device);
+    },
     async refreshSelectedTopicRecords({ state, dispatch, commit }) {
       return dispatch('topicRecords/load', async () => {
         const token = await dispatch('refreshToken', {}, { root: true });
@@ -133,17 +145,17 @@ const store = new Vuex.Store({
     async deleteDevice({ commit, state, dispatch }, id: string) {
       const token = await dispatch('refreshToken', {}, { root: true });
       await state.api.client.deleteDevice(token, id)
-      commit('deviceDeleted', id);
+      //commit('deviceDeleted', id);
     },
     async enableDevice({ commit, state, dispatch }, id: string) {
       const token = await dispatch('refreshToken', {}, { root: true });
       await state.api.client.enableDevice(token, id)
-      commit('deviceEnabled', id);
+      //commit('deviceEnabled', id);
     },
     async disableDevice({ commit, state, dispatch }, id: string) {
       const token = await dispatch('refreshToken', {}, { root: true });
       await state.api.client.disableDevice(token, id)
-      commit('deviceDisabled', id);
+      //commit('deviceDisabled', id);
     },
     async changeDevicePassword({ commit }, { id, password }) {
       commit('devicePasswordChanged', { id, password });

@@ -1,6 +1,13 @@
 <template>
   <v-card :dark="dark" :loading="areEventsLoading">
-    <v-data-table class="pa-4" sort-by="timestamp" sort-desc :headers="headers" :items="events" item-key="timestamp">
+    <v-data-table
+      class="pa-4"
+      sort-by="timestamp"
+      sort-desc
+      :headers="headers"
+      :items="events"
+      item-key="timestamp"
+    >
       <template v-slot:top>
         <v-toolbar dense flat :color="color">
           <v-toolbar-title>{{ title }}</v-toolbar-title>
@@ -55,6 +62,22 @@ export default Vue.extend({
     },
     formatEvent(event: Event): string {
       switch (event.service) {
+        case 'vespiary': {
+          switch (event.kind) {
+            case 'device_created':
+              return `device ${event.attributes.device_id} created`;
+            case 'device_deleted':
+              return `device ${event.attributes.device_id} deleted`;
+            case 'device_enabled':
+              return `${this.resolveDeviceName(event.attributes.device_id)} enabled`;
+            case 'device_disabled':
+              return `${this.resolveDeviceName(event.attributes.device_id)} disabled`;
+            case 'device_password_changed':
+              return `${this.resolveDeviceName(event.attributes.device_id)} password changed`;
+            default:
+              return `${event.service}:${event.kind} (${JSON.stringify(event.attributes)})`
+          }
+        }
         default:
           switch (event.kind) {
             case 'session_connected':
@@ -66,7 +89,7 @@ export default Vue.extend({
             case 'session_disconnected':
               return `${this.resolveDeviceName(event.attributes.session_id)} disconnected`
             default:
-              return `wasp:${event.kind} (${JSON.stringify(event.attributes)})`
+              return `${event.service || 'wasp'}:${event.kind} (${JSON.stringify(event.attributes)})`
           }
       }
     },
