@@ -124,6 +124,9 @@ const store = new Vuex.Store({
       commit('topicSelected', { topic });
       await dispatch('refreshSelectedTopicRecords');
     },
+    async refreshState({ dispatch }) {
+      await dispatch('refreshDevices');
+    },
     async refreshDevices({ state, dispatch, commit }) {
       return dispatch('deviceList/load', async () => {
         const token = await dispatch('refreshToken', {}, { root: true });

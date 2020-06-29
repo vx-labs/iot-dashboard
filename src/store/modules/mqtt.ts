@@ -94,6 +94,7 @@ const NewMQTTModule = (): Module<any, any> => ({
         client.on('connect', () => {
           client.subscribe('$SYS/_audit/events', { qos: 1 }, (err) => {
             if (err === null) {
+              dispatch('refreshState');
               resolve();
             } else {
               reject(err);
