@@ -48,25 +48,30 @@ const store = new Vuex.Store({
       state.resources.topics = topics;
     },
     deviceCreated(state, device: Device) {
-      const idx = state.resources.devices.findIndex(elt => elt.id === device.id);
-      if (idx > -1) {
+      if (!state.resources.devices.some(elt => elt.id === device.id)) {
         state.resources.devices.push(device);
-        state.resources.devices.sort();
+        state.resources.devices = state.resources.devices.sort((a, b) => a.name.localeCompare(b.name));
       }
     },
     deviceDeleted(state, id: string) {
       state.resources.devices = state.resources.devices.filter(elt => elt.id !== id);
     },
+    devicePending(state, id: string) {
+      const idx = state.resources.devices.findIndex(elt => elt.id === id);
+      if (idx > -1) {
+        Vue.set(state.resources.devices, idx, Object.assign({}, state.resources.devices[idx], { pendingAsyncAction: true }))
+      }
+    },
     deviceEnabled(state, id: string) {
       const idx = state.resources.devices.findIndex(elt => elt.id === id);
       if (idx > -1) {
-        Vue.set(state.resources.devices, idx, Object.assign({}, state.resources.devices[idx], { active: true }))
+        Vue.set(state.resources.devices, idx, Object.assign({}, state.resources.devices[idx], { active: true, pendingAsyncAction: false }))
       }
     },
     deviceConnected(state, id: string) {
       const idx = state.resources.devices.findIndex(elt => elt.id === id);
       if (idx > -1) {
-        Vue.set(state.resources.devices, idx, Object.assign({}, state.resources.devices[idx], { connected: true }))
+        Vue.set(state.resources.devices, idx, Object.assign({}, state.resources.devices[idx], { connected: true, pendingAsyncAction: false }))
       }
     },
     deviceSubscribed(state, id: string) {
@@ -90,13 +95,13 @@ const store = new Vuex.Store({
     deviceDisabled(state, id: string) {
       const idx = state.resources.devices.findIndex(elt => elt.id === id);
       if (idx > -1) {
-        Vue.set(state.resources.devices, idx, Object.assign({}, state.resources.devices[idx], { active: false }))
+        Vue.set(state.resources.devices, idx, Object.assign({}, state.resources.devices[idx], { active: false, pendingAsyncAction: false }))
       }
     },
     devicePasswordChanged(state, { id, password }) {
       const idx = state.resources.devices.findIndex(elt => elt.id === id);
       if (idx > -1) {
-        Vue.set(state.resources.devices, idx, Object.assign({}, state.resources.devices[idx], { password }))
+        Vue.set(state.resources.devices, idx, Object.assign({}, state.resources.devices[idx], { password, pendingAsyncAction: false }))
       }
     },
     topicSelected(state, { topic }) {
@@ -146,21 +151,22 @@ const store = new Vuex.Store({
       await state.api.client.createDevice(token, input);
     },
     async deleteDevice({ commit, state, dispatch }, id: string) {
+      commit('devicePending', id);
       const token = await dispatch('refreshToken', {}, { root: true });
       await state.api.client.deleteDevice(token, id)
-      //commit('deviceDeleted', id);
     },
     async enableDevice({ commit, state, dispatch }, id: string) {
+      commit('devicePending', id);
       const token = await dispatch('refreshToken', {}, { root: true });
       await state.api.client.enableDevice(token, id)
-      //commit('deviceEnabled', id);
     },
     async disableDevice({ commit, state, dispatch }, id: string) {
+      commit('devicePending', id);
       const token = await dispatch('refreshToken', {}, { root: true });
       await state.api.client.disableDevice(token, id)
-      //commit('deviceDisabled', id);
     },
     async changeDevicePassword({ commit }, { id, password }) {
+      commit('devicePending', id);
       commit('devicePasswordChanged', { id, password });
     },
     async refreshEvents({ state, dispatch, commit }) {

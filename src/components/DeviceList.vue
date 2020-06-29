@@ -35,7 +35,7 @@
         </v-btn>
         <v-menu>
           <template v-slot:activator="{ on }">
-            <v-btn icon v-on="on">
+            <v-btn :disabled="item.pendingAsyncAction" :loading="item.pendingAsyncAction" icon v-on="on">
               <v-icon>mdi-dots-vertical</v-icon>
             </v-btn>
           </template>

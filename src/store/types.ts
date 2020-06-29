@@ -36,6 +36,7 @@ export interface Device {
   sentBytes: number;
   subscriptionCount: number;
   humanStatus: string;
+  pendingAsyncAction: boolean;
 }
 class Api {
   client = new ApiClient('https://api.iot.cloud.vx-labs.net');
