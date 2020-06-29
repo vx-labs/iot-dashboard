@@ -30,6 +30,7 @@ export default Vue.extend({
     if (this.$store.getters.authenticated) {
       (async () => {
         await Promise.all([
+          this.$store.dispatch('refreshUsername'),
           this.$store.dispatch('refreshDevices'),
           this.$store.dispatch('refreshTopics'),
           this.$store.dispatch('refreshEvents'),

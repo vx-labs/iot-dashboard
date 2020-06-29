@@ -42,7 +42,6 @@ class Api {
   client = new ApiClient('https://api.iot.cloud.vx-labs.net');
 }
 class Resources {
-  owner = '';
   selectedTopic = '';
   selectedTopicRecords: Record[] = [];
   topics: Topic[] = [
@@ -77,6 +76,7 @@ class Resources {
 }
 
 export class MainState {
+  username?: string = undefined;
   api = new Api();
   resources = new Resources();
   now = new Date();

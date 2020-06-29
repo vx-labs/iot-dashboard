@@ -40,7 +40,7 @@ const NewMQTTModule = (): Module<any, any> => ({
           protocolId: 'MQIsdp',
           protocolVersion: 3,
           clientId: state.clientId,
-          username: 'vx:psk',
+          username: getters.username,
           password: password,
           host: 'broker.iot.cloud.vx-labs.net',
           hostname: 'broker.iot.cloud.vx-labs.net',

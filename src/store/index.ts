@@ -13,8 +13,8 @@ const maxEvents = 500;
 const store = new Vuex.Store({
   state: new MainState(),
   getters: {
+    username(state) { return state.username },
     now(state) { return state.now },
-    owner(state) { return state.resources.owner },
     devices(state) { return state.resources.devices },
     topics(state) { return state.resources.topics; },
     events(state) { return state.resources.events; },
@@ -26,6 +26,9 @@ const store = new Vuex.Store({
     isSelectedTopicRecordsLoading(state, getters) { return getters['topicRecords/isPending'] },
   },
   mutations: {
+    usernameSet(state, username: string) {
+      state.username = username;
+    },
     timeTicked(state, now: Date) {
       state.now = now;
     },
@@ -168,6 +171,13 @@ const store = new Vuex.Store({
     async changeDevicePassword({ commit }, { id, password }) {
       commit('devicePending', id);
       commit('devicePasswordChanged', { id, password });
+    },
+    async refreshUsername({ state, dispatch, commit }) {
+      return dispatch('username/load', async () => {
+        const token = await dispatch('refreshToken', {}, { root: true });
+        const info = await state.api.client.getAccountInformations(token)
+        commit('usernameSet', info.username);
+      });
     },
     async refreshEvents({ state, dispatch, commit }) {
       return dispatch('eventList/load', async () => {

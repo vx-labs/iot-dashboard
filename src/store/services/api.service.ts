@@ -10,7 +10,7 @@ export class ApiClient {
     });
   }
   async getAccountInformations(token: string): Promise<AccountInformations> {
-    const resp = await this.httpClient.get(`/accounts/info/`,
+    const resp = await this.httpClient.get(`/account/info/`,
       {
         headers: {
           'Authorization': `Bearer ${token}`,
