@@ -4,8 +4,9 @@ import Devices from '../views/Devices.vue'
 import Events from '../views/Events.vue'
 import Topics from '../views/Topics.vue'
 import Dashboard from '../views/Dashboard.vue'
-import Login from '../components/Login.vue'
+import Login from '../views/Login.vue'
 import About from '../views/About.vue'
+import Support from '../views/Support.vue'
 import store from '../store/index';
 
 Vue.use(VueRouter)
@@ -52,6 +53,7 @@ const routes: Array<RouteConfig> = [
     component: About,
   },
   { path: '/login', component: Login },
+  { path: '/support', component: Support },
 ]
 
 const router = new VueRouter({

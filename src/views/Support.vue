@@ -12,6 +12,6 @@
 
 <script>
 export default {
-  name: 'About',
+  name: 'Support',
 }
 </script>
