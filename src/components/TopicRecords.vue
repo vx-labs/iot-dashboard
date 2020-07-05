@@ -12,7 +12,7 @@
     </v-card-title>
     <v-tabs v-model="tab" grow>
       <v-tab>History</v-tab>
-      <v-tab>Graph</v-tab>
+      <v-tab :disabled="isGraphAvailable">Graph</v-tab>
       <v-tab>Statistics</v-tab>
     </v-tabs>
     <v-tabs-items v-model="tab">
@@ -69,7 +69,7 @@ import { mapGetters, mapActions } from 'vuex'
 import Timeline from '@/components/Timeline.vue';
 import TopicStats from '@/components/TopicStats.vue';
 import HumanTimestamp from '@/components/HumanTimestamp.vue';
-import { Device } from '../store/types';
+import { Device, Record } from '../store/types';
 export default Vue.extend({
   name: 'deviceList',
   components: { Timeline, TopicStats, HumanTimestamp },
@@ -85,6 +85,10 @@ export default Vue.extend({
       'isSelectedTopicRecordsLoading',
       'devices'
     ]),
+    isGraphAvailable() {
+      const regexp = /^[\d]+(\.[\d]+)?$/;
+      return (this.selectedTopicRecords as Record[]).some(elt => !regexp.test(elt.payload));
+    },
   },
   methods: {
     ...mapActions([
