@@ -1,11 +1,18 @@
 import { Module } from 'vuex';
 import { connect } from 'mqtt';
 import { Device, Event } from '../types';
+
+let instance = localStorage.getItem('vx:instance');
+if (instance === null) {
+  instance = Math.random().toString(36).substr(2, 8);
+  localStorage.setItem('vx:instance', instance);
+}
+
 class MqttState {
   connected = false;
   connecting = false;
   offlineReason = '';
-  clientId = 'web-console'
+  clientId = `web-console-${instance}`
 }
 
 
@@ -113,7 +120,7 @@ const NewMQTTModule = (): Module<any, any> => ({
             }
           })
         });
-        client.on('error', (err) => commit('mqttDisconnected', err) );
+        client.on('error', (err) => commit('mqttDisconnected', err));
         client.on('reconnect', () => { commit('mqttConnecting') });
         client.on('disconnect', () => { commit('mqttDisconnected', 'Broker ask us to disconnect') });
       }));
