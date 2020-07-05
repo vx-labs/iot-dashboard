@@ -175,8 +175,13 @@ const store = new Vuex.Store({
     async refreshUsername({ state, dispatch, commit }) {
       return dispatch('username/load', async () => {
         const token = await dispatch('refreshToken', {}, { root: true });
-        const info = await state.api.client.getAccountInformations(token)
-        commit('usernameSet', info.username);
+        try {
+          const info = await state.api.client.getAccountInformations(token);
+          commit('usernameSet', info.usernames[0]);
+        } catch (err) {
+          const info = await state.api.client.createAccount(token);
+          commit('usernameSet', info.usernames[0]);
+        }
       });
     },
     async refreshEvents({ state, dispatch, commit }) {

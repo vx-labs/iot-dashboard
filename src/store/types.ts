@@ -1,6 +1,7 @@
 import { ApiClient } from './services/api.service';
 export interface AccountInformations {
-  username: string;
+  id: string;
+  usernames: string[];
 }
 export interface Topic {
   name: string;

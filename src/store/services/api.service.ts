@@ -19,6 +19,16 @@ export class ApiClient {
     return (resp.data as AccountInformations);
 
   }
+  async createAccount(token: string): Promise<AccountInformations> {
+    const resp = await this.httpClient.post(`/account/`,
+      {},
+      {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        }
+      });
+    return (resp.data as AccountInformations);
+  }
   async createDevice(token: string, input: CreateDeviceRequest): Promise<void> {
     return this.httpClient.post(`/devices/`,
       {
