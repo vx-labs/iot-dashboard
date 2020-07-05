@@ -28,7 +28,16 @@
           <template v-slot:item.humanRecords="{ item }">
             <v-list-item>
               <v-list-item-content>
-                <v-list-item-title v-text="item.payload"></v-list-item-title>
+                <v-list-item-title
+                  v-if="topics.find(elt => elt.name === selectedTopic).guessedContentType === 'text/plain; charset=utf-8'"
+                  v-text="decodeBase64(item.payload)"
+                ></v-list-item-title>
+                <v-list-item-title
+                  v-else-if="topics.find(elt => elt.name === selectedTopic).guessedContentType === 'image/jpeg'"
+                >
+                  <img alt="test" :src="encodeImage(item.payload)" />
+                </v-list-item-title>
+                <v-list-item-title v-else v-text="'<Binary payload hidden>'"></v-list-item-title>
                 <v-list-item-subtitle v-if="devices.length > 0">
                   Published by:
                   &nbsp;
@@ -39,7 +48,7 @@
                 <v-list-item-action-text>
                   <HumanTimestamp :timestamp="item.timestamp"></HumanTimestamp>
                 </v-list-item-action-text>
-                <v-list-item-action-text>{{ item.payload.length }} Bytes</v-list-item-action-text>
+                <v-list-item-action-text>{{ item.payload ? decodeBase64(item.payload).length: 0 }} Bytes</v-list-item-action-text>
               </v-list-item-action>
             </v-list-item>
           </template>
@@ -98,7 +107,12 @@ export default Vue.extend({
       const device = this.devices.find((elt: Device) => elt.id === id);
       if (device !== undefined) { return device.name }
       return 'Unavailable';
-    }
+    },
+    decodeBase64(buffer: string): string { return atob(buffer) },
+    encodeImage(buffer: string): string {
+      const a = `data:image/jpeg;base64,${buffer}`;
+      return a;
+    },
   },
   data: () => ({
     tab: null,

@@ -30,14 +30,18 @@
           <template v-slot:default="{ }">
             <v-list-item-content>
               <v-list-item-title v-text="item.name"></v-list-item-title>
-              <v-list-item-subtitle v-if="item.lastRecord !== undefined">
+              <v-list-item-subtitle
+                v-if="item.lastRecord !== undefined  && item.guessedContentType === 'text/plain; charset=utf-8'"
+              >
                 Last message:
                 &nbsp;
                 <span
                   v-if="item.lastRecord.payload !== undefined"
                 >
-                  <span v-if="item.lastRecord.payload.length < 30">{{item.lastRecord.payload}}</span>
-                  <span v-else>{{item.lastRecord.payload.substring(0, 30)}}...</span>
+                  <span
+                    v-if="decodeBase64(item.lastRecord.payload).length < 30"
+                  >{{decodeBase64(item.lastRecord.payload)}}</span>
+                  <span v-else>{{decodeBase64(item.lastRecord.payload).substring(0, 30)}}...</span>
                 </span>
                 &nbsp;
                 <HumanTimestamp :timestamp="item.lastRecord.timestamp"></HumanTimestamp>
@@ -84,6 +88,7 @@ export default Vue.extend({
         search != null &&
         item.name.toLocaleLowerCase().includes(search.toLocaleLowerCase());
     },
+    decodeBase64(buffer: string): string { return atob(buffer) },
   },
   data: () => ({
     search: null,

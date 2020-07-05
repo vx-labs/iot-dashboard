@@ -8,6 +8,7 @@ export interface Topic {
   messageCount: number;
   sizeInBytes: number;
   lastRecord?: Record;
+  guessedContentType: string;
 }
 export interface Record {
   timestamp: number;
