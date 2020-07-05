@@ -15,7 +15,7 @@
         <v-list>
           <v-subheader>Resources</v-subheader>
           <v-list-item-group>
-            <v-list-item>
+            <v-list-item to="/devices">
               <v-list-item-icon>
                 <v-icon>mdi-devices</v-icon>
               </v-list-item-icon>
@@ -44,7 +44,7 @@
         <v-list>
           <v-subheader>Usage</v-subheader>
           <v-list-item-group>
-            <v-list-item>
+            <v-list-item to="/topics">
               <v-list-item-icon>
                 <v-icon>mdi-share-variant</v-icon>
               </v-list-item-icon>
@@ -55,8 +55,7 @@
                 </v-list-item-subtitle>
               </v-list-item-content>
             </v-list-item>
-
-            <v-list-item>
+            <v-list-item to="/topics">
               <v-list-item-icon>
                 <v-icon>mdi-email</v-icon>
               </v-list-item-icon>
@@ -67,7 +66,7 @@
                 </v-list-item-subtitle>
               </v-list-item-content>
             </v-list-item>
-            <v-list-item>
+            <v-list-item to="/topics">
               <v-list-item-icon>
                 <v-icon>mdi-harddisk</v-icon>
               </v-list-item-icon>
