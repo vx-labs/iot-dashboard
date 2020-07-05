@@ -1,5 +1,14 @@
 <template>
-  <EventList title="Events"></EventList>
+  <div>
+    <v-alert
+      outlined
+      icon="mdi-school"
+      type="info"
+      color="blue-grey"
+      text
+    >Events displays the list of all actions that occured in your account.</v-alert>
+    <EventList title="Events"></EventList>
+  </div>
 </template>
 
 <script lang="ts">
