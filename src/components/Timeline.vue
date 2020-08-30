@@ -16,7 +16,7 @@ export default Vue.extend({
     parsedLogs() {
       return this.records.map(elt => ({
         t: new Date(elt.timestamp/1000000),
-        y: elt.payload,
+        y: atob(elt.payload),
       }));
     },
   },

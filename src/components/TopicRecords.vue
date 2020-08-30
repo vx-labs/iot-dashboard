@@ -23,7 +23,7 @@
           sort-desc
           class="pa-4"
           :headers="headers"
-          :items="selectedTopicRecords"
+          :items="selectedTopicRecords.filter(elt => elt.payload !== undefined && elt.payload.length> 0)"
         >
           <template v-slot:item.humanRecords="{ item }">
             <v-list-item>
@@ -35,7 +35,7 @@
                 <v-list-item-title
                   v-else-if="topics.find(elt => elt.name === selectedTopic).guessedContentType === 'image/jpeg'"
                 >
-                  <img alt="test" :src="encodeImage(item.payload)" />
+                  <img :src="encodeImage(item.payload)" />
                 </v-list-item-title>
                 <v-list-item-title v-else v-text="'<Binary payload hidden>'"></v-list-item-title>
                 <v-list-item-subtitle v-if="devices.length > 0">
@@ -95,8 +95,13 @@ export default Vue.extend({
       'devices'
     ]),
     isGraphAvailable() {
+      if (this.selectedTopicRecords === undefined || this.selectedTopicRecords === null) {
+        return false;
+      }
       const regexp = /^[\d]+(\.[\d]+)?$/;
-      return (this.selectedTopicRecords as Record[]).some(elt => !regexp.test(elt.payload));
+      return (this.selectedTopicRecords as Record[])
+        .map((elt: Record) => atob(elt.payload))
+        .some(elt => !regexp.test(elt));
     },
   },
   methods: {
