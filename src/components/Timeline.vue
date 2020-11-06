@@ -1,56 +1,58 @@
+<template>
+  <div class="linechart">
+    <div style="width: 100%" :id="id"></div>
+  </div>
+</template>
 <script>
-import Vue from "vue";
-import { Line } from "vue-chartjs";
+import Dygraph from 'dygraphs'
+import 'dygraphs/dist/dygraph.css'
 
-export default Vue.extend({
-  name: 'timeline',
-  props: ["records"],
-  extends: Line,
-  watch: {
-    records() {
-      this.$data._chart.data.datasets[0].data = this.parsedLogs;
-      this.$data._chart.update();
+
+export default {
+  name: 'Linechart',
+  props: ['records', 'id'],
+  data() {
+    return {
+      plot: null,
+      options: {
+        labels: ['Time', "Value"],
+      },
     }
   },
-  computed: {
-    parsedLogs() {
-      return this.records.map(elt => ({
-        t: new Date(elt.timestamp/1000000),
-        y: atob(elt.payload),
-      }));
+  watch: {
+    records() {
+      if (this.plot !== null && this.records !== undefined && this.records !== null) {
+        this.plot.updateOptions({ 'file': this.records, ...this.options });
+      }
     },
   },
-  mounted() {
-    this.renderChart(
-      {
-        datasets: [
-          {
-            label: "Records",
-            data: this.parsedLogs,
-          },
-        ]
-      },
-      {
-        responsive: true,
-        maintainAspectRatio: false,
-        scales: {
-          xAxes: [
-            {
-              type: "time",
-              distribution: "series",
-              time: {
-                minUnit: "minute",
-                round: "minute"
-              }
-            }
-          ]
-        }
-      }
+  mounted: function () {
+    // concat label div to options
+    this.plot = new Dygraph(
+      // containing div
+      document.getElementById(this.id),
+      this.records,
+      this.options,
     );
   }
-});
-
+}
 </script>
 
 <style>
+.legend {
+    display: flex;
+    justify-content: center;
+    margin-top: 15px;
+    vertical-align: bottom;
+}
+.dygraph-xlabel {
+    display: flex;
+    justify-content: center;
+}
+
+.linechart {
+    margin-top: 10px;
+    margin-left: 10px;
+    margin-right: 10px;
+}
 </style>

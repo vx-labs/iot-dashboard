@@ -12,7 +12,7 @@
     </v-card-title>
     <v-tabs v-model="tab" grow>
       <v-tab>History</v-tab>
-      <v-tab :disabled="isGraphAvailable">Graph</v-tab>
+      <v-tab :disabled="!isGraphAvailable">Graph</v-tab>
       <v-tab>Statistics</v-tab>
     </v-tabs>
     <v-tabs-items v-model="tab">
@@ -23,24 +23,36 @@
           sort-desc
           class="pa-4"
           :headers="headers"
-          :items="selectedTopicRecords.filter(elt => elt.payload !== undefined && elt.payload.length> 0)"
+          :items="
+            selectedTopicRecords.filter(
+              (elt) => elt.payload !== undefined && elt.payload.length > 0
+            )
+          "
         >
           <template v-slot:item.humanRecords="{ item }">
             <v-list-item>
               <v-list-item-content>
                 <v-list-item-title
-                  v-if="topics.find(elt => elt.name === selectedTopic).guessedContentType === 'text/plain; charset=utf-8'"
+                  v-if="
+                    topics.find((elt) => elt.name === selectedTopic)
+                      .guessedContentType === 'text/plain; charset=utf-8'
+                  "
                   v-text="decodeBase64(item.payload)"
                 ></v-list-item-title>
                 <v-list-item-title
-                  v-else-if="topics.find(elt => elt.name === selectedTopic).guessedContentType === 'image/jpeg'"
+                  v-else-if="
+                    topics.find((elt) => elt.name === selectedTopic)
+                      .guessedContentType === 'image/jpeg'
+                  "
                 >
                   <img :src="encodeImage(item.payload)" />
                 </v-list-item-title>
-                <v-list-item-title v-else v-text="'<Binary payload hidden>'"></v-list-item-title>
+                <v-list-item-title
+                  v-else
+                  v-text="'<Binary payload hidden>'"
+                ></v-list-item-title>
                 <v-list-item-subtitle v-if="devices.length > 0">
-                  Published by:
-                  &nbsp;
+                  Published by: &nbsp;
                   <span>{{ resolveDeviceName(item.publisher) }}</span>
                 </v-list-item-subtitle>
               </v-list-item-content>
@@ -48,7 +60,12 @@
                 <v-list-item-action-text>
                   <HumanTimestamp :timestamp="item.timestamp"></HumanTimestamp>
                 </v-list-item-action-text>
-                <v-list-item-action-text>{{ item.payload ? decodeBase64(item.payload).length: 0 }} Bytes</v-list-item-action-text>
+                <v-list-item-action-text
+                  >{{
+                    item.payload ? decodeBase64(item.payload).length : 0
+                  }}
+                  Bytes</v-list-item-action-text
+                >
               </v-list-item-action>
             </v-list-item>
           </template>
@@ -57,7 +74,15 @@
       <v-tab-item>
         <v-card flat>
           <v-card-text>
-            <Timeline :records="selectedTopicRecords"></Timeline>
+            <Timeline
+              id="records"
+              :records="
+                selectedTopicRecords.map((elt) => [
+                  new Date(elt.timestamp / 1000000),
+                  parseFloat(decodeBase64(elt.payload)),
+                ])
+              "
+            ></Timeline>
           </v-card-text>
         </v-card>
       </v-tab-item>
@@ -78,7 +103,7 @@ import { mapGetters, mapActions } from 'vuex'
 import Timeline from '@/components/Timeline.vue';
 import TopicStats from '@/components/TopicStats.vue';
 import HumanTimestamp from '@/components/HumanTimestamp.vue';
-import { Device, Record } from '../store/types';
+import { Device } from '../store/types';
 export default Vue.extend({
   name: 'deviceList',
   components: { Timeline, TopicStats, HumanTimestamp },
@@ -98,10 +123,7 @@ export default Vue.extend({
       if (this.selectedTopicRecords === undefined || this.selectedTopicRecords === null) {
         return false;
       }
-      const regexp = /^[\d]+(\.[\d]+)?$/;
-      return (this.selectedTopicRecords as Record[])
-        .map((elt: Record) => atob(elt.payload))
-        .some(elt => !regexp.test(elt));
+      return true;
     },
   },
   methods: {
