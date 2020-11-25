@@ -1,7 +1,7 @@
 <template>
-  <v-row justify="space-around">
-    <GraphCard title="Messages sent per hour" :serie="rate"></GraphCard>
-    <GraphCard title="Bytes sent per hour" :serie="sizeRate"></GraphCard>
+  <v-row align="center" justify="space-around">
+    <GraphCard class="ma-4" title="Messages sent per hour" :serie="rate"></GraphCard>
+    <GraphCard class="ma-4" title="Bytes sent per hour" :serie="sizeRate"></GraphCard>
   </v-row>
 </template>
 <script lang="ts">
@@ -23,8 +23,8 @@ export default Vue.extend({
             buckets.push([cur]);
             return buckets;
           }
-          const periodStart = (buckets[buckets.length - 1])[0].timestamp;
-          if (periodStart - cur.timestamp >= 3600 * 1000000000) {
+          const periodStart = (buckets[buckets.length - 1])[0].sentAt;
+          if ((periodStart.getTime() - cur.sentAt.getTime()) > 3600000) {
             buckets.push([cur]);
           } else {
             buckets[buckets.length - 1].push(cur);

@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import VueRouter, { RouteConfig, NavigationGuard } from 'vue-router'
-import Devices from '../views/Devices.vue'
 import Events from '../views/Events.vue'
+import Applications from '../views/Applications.vue'
 import Topics from '../views/Topics.vue'
 import Dashboard from '../views/Dashboard.vue'
 import Login from '../views/Login.vue'
@@ -12,6 +12,9 @@ import store from '../store/index';
 Vue.use(VueRouter)
 
 const requireAuth: NavigationGuard<Vue> = (to, from, next) => {
+  if (!next){
+    return
+  }
   if (!store.getters.authenticated) {
     next({
       path: '/login',
@@ -30,9 +33,9 @@ const routes: Array<RouteConfig> = [
     beforeEnter: requireAuth,
   },
   {
-    path: '/devices/',
-    name: 'Devices',
-    component: Devices,
+    path: '/applications/',
+    name: 'Applications',
+    component: Applications,
     beforeEnter: requireAuth,
   },
   {

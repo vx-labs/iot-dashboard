@@ -17,8 +17,8 @@ export default Vue.extend({
   },
 
   methods: {
-    formatDate(timestamp: number): string {
-      return moment(timestamp / 1000000).from(moment(this.now));
+    formatDate(timestamp: Date): string {
+      return moment(timestamp).from(moment(this.now));
     }
   },
 })

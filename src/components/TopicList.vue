@@ -20,36 +20,44 @@
             single-line
             hide-details
           ></v-text-field>
-          <v-btn icon @click="refreshTopics">
+          <v-btn icon @click="refreshState">
             <v-icon>mdi-refresh</v-icon>
           </v-btn>
         </v-toolbar>
       </template>
       <template v-slot:item.humanTopic="{ item }">
         <v-list-item :key="item.title" @click="selectTopic(item.name)">
-          <template v-slot:default="{ }">
+          <template v-slot:default="{}">
             <v-list-item-content>
               <v-list-item-title v-text="item.name"></v-list-item-title>
               <v-list-item-subtitle
-                v-if="item.lastRecord !== undefined  && item.guessedContentType === 'text/plain; charset=utf-8'"
+                v-if="
+                  item.lastRecord !== undefined &&
+                  item.guessedContentType === 'text/plain; charset=utf-8'
+                "
               >
-                Last message:
-                &nbsp;
-                <span
-                  v-if="item.lastRecord.payload !== undefined"
-                >
-                  <span
-                    v-if="decodeBase64(item.lastRecord.payload).length < 30"
-                  >{{decodeBase64(item.lastRecord.payload)}}</span>
-                  <span v-else>{{decodeBase64(item.lastRecord.payload).substring(0, 30)}}...</span>
+                Last message: &nbsp;
+                <span v-if="item.lastRecord.payload !== undefined">
+                  <span v-if="item.lastRecord.payload.length < 30">{{
+                    item.lastRecord.payload
+                  }}</span>
+                  <span v-else
+                    >{{ item.lastRecord.payload.substring(0, 30) }}...</span
+                  >
                 </span>
                 &nbsp;
-                <HumanTimestamp :timestamp="item.lastRecord.timestamp"></HumanTimestamp>
+                <HumanTimestamp
+                  :timestamp="item.lastRecord.sentAt"
+                ></HumanTimestamp>
               </v-list-item-subtitle>
             </v-list-item-content>
             <v-list-item-action>
-              <v-list-item-action-text>{{ item.messageCount }} Messages</v-list-item-action-text>
-              <v-list-item-action-text>{{ item.sizeInBytes }} Bytes</v-list-item-action-text>
+              <v-list-item-action-text
+                >{{ item.messageCount }} Messages</v-list-item-action-text
+              >
+              <v-list-item-action-text
+                >{{ item.sizeInBytes }} Bytes</v-list-item-action-text
+              >
             </v-list-item-action>
           </template>
         </v-list-item>
@@ -80,7 +88,7 @@ export default Vue.extend({
   },
   methods: {
     ...mapActions([
-      'refreshTopics',
+      'refreshState',
       'selectTopic'
     ]),
     topicsFilter(value: object, search: string | null, item?: Topic) {

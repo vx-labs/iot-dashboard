@@ -33,12 +33,12 @@ const NewLoaderModule = (): Module<any, any> => ({
 
 const Loaders: Module<any, any> = {
   modules: {
+    'state': NewLoaderModule(),
     'deviceList': NewLoaderModule(),
     'topicList': NewLoaderModule(),
     'topicRecords': NewLoaderModule(),
     'eventList': NewLoaderModule(),
     'username': NewLoaderModule(),
-    'mqtt': NewLoaderModule(),
   }
 }
 export default Loaders;

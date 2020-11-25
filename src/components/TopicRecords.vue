@@ -37,7 +37,7 @@
                     topics.find((elt) => elt.name === selectedTopic)
                       .guessedContentType === 'text/plain; charset=utf-8'
                   "
-                  v-text="decodeBase64(item.payload)"
+                  v-text="item.payload"
                 ></v-list-item-title>
                 <v-list-item-title
                   v-else-if="
@@ -51,18 +51,18 @@
                   v-else
                   v-text="'<Binary payload hidden>'"
                 ></v-list-item-title>
-                <v-list-item-subtitle v-if="devices.length > 0">
+                <v-list-item-subtitle>
                   Published by: &nbsp;
-                  <span>{{ resolveDeviceName(item.publisher) }}</span>
+                  <span>{{ item.sentBy }}</span>
                 </v-list-item-subtitle>
               </v-list-item-content>
               <v-list-item-action>
                 <v-list-item-action-text>
-                  <HumanTimestamp :timestamp="item.timestamp"></HumanTimestamp>
+                  <HumanTimestamp :timestamp="item.sentAt"></HumanTimestamp>
                 </v-list-item-action-text>
                 <v-list-item-action-text
                   >{{
-                    item.payload ? decodeBase64(item.payload).length : 0
+                    item.payload ? item.payload.length : 0
                   }}
                   Bytes</v-list-item-action-text
                 >
@@ -76,12 +76,8 @@
           <v-card-text>
             <Timeline
               id="records"
-              :records="
-                selectedTopicRecords.map((elt) => [
-                  new Date(elt.timestamp / 1000000),
-                  parseFloat(decodeBase64(elt.payload)),
-                ])
-              "
+              :records="timelineSerie"
+              :customBars="true"
             ></Timeline>
           </v-card-text>
         </v-card>
@@ -103,7 +99,13 @@ import { mapGetters, mapActions } from 'vuex'
 import Timeline from '@/components/Timeline.vue';
 import TopicStats from '@/components/TopicStats.vue';
 import HumanTimestamp from '@/components/HumanTimestamp.vue';
-import { Device } from '../store/types';
+import { Record } from '../store/types';
+
+interface RecordNumber {
+  sentAt: Date;
+  payload: number;
+}
+
 export default Vue.extend({
   name: 'deviceList',
   components: { Timeline, TopicStats, HumanTimestamp },
@@ -117,7 +119,6 @@ export default Vue.extend({
       'selectedTopic',
       'selectedTopicRecords',
       'isSelectedTopicRecordsLoading',
-      'devices'
     ]),
     isGraphAvailable() {
       if (this.selectedTopicRecords === undefined || this.selectedTopicRecords === null) {
@@ -125,16 +126,46 @@ export default Vue.extend({
       }
       return true;
     },
+    buckets() {
+      return (this.selectedTopicRecords as Record[])
+        .reverse()
+        .map((elt: Record): RecordNumber => ({
+          sentAt: elt.sentAt,
+          payload: parseInt(elt.payload),
+        }))
+        .reduce((buckets: RecordNumber[][], cur: RecordNumber): RecordNumber[][] => {
+          if (buckets.length == 0) {
+            buckets.push([cur]);
+            return buckets;
+          }
+          const periodStart = (buckets[buckets.length - 1])[0].sentAt;
+          if ((periodStart.getTime() - cur.sentAt.getTime()) > 15*60*1000) {
+            buckets.push([cur]);
+          } else {
+            buckets[buckets.length - 1].push(cur);
+          }
+          return buckets;
+        }, [])
+        .reverse();
+    },
+    timelineSerie() {
+      const v = (this.buckets as RecordNumber[][])
+        .map(elt => elt.sort((a, b) => a.payload - b.payload))
+        .map((elt) => [
+          elt[0].sentAt,
+          [
+            elt[0].payload,
+            elt.reduce((sum, cur) => sum + cur.payload, 0) / elt.length,
+            elt[elt.length - 1].payload,
+          ],
+        ])
+      return v
+    }
   },
   methods: {
     ...mapActions([
       'refreshSelectedTopicRecords',
     ]),
-    resolveDeviceName(id: string): string {
-      const device = this.devices.find((elt: Device) => elt.id === id);
-      if (device !== undefined) { return device.name }
-      return 'Unavailable';
-    },
     decodeBase64(buffer: string): string { return atob(buffer) },
     encodeImage(buffer: string): string {
       const a = `data:image/jpeg;base64,${buffer}`;

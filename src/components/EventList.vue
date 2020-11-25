@@ -13,7 +13,7 @@
           <v-toolbar-title>{{ title }}</v-toolbar-title>
           <v-spacer></v-spacer>
           <v-spacer></v-spacer>
-          <v-btn icon @click="refreshEvents">
+          <v-btn icon>
             <v-icon>mdi-refresh</v-icon>
           </v-btn>
         </v-toolbar>
@@ -21,20 +21,20 @@
       <template v-slot:item.timestamp="{ item }">
         <HumanTimestamp :timestamp="item.timestamp"></HumanTimestamp>
       </template>
-      <template v-slot:item.actions="{item}">{{ formatEvent(item) }}</template>
+      <template v-slot:item.actions="{ item }">{{
+        formatEvent(item)
+      }}</template>
     </v-data-table>
   </v-card>
 </template>
 
 <script lang="ts">
 import Vue from 'vue'
-import { mapGetters, mapActions } from 'vuex'
+import { mapGetters } from 'vuex'
 import HumanTimestamp from '@/components/HumanTimestamp.vue';
 import { Event } from '@/store/types';
-import { Device } from '../store/types';
 
 export default Vue.extend({
-  name: 'deviceList',
   components: { HumanTimestamp },
   props: [
     'title',
@@ -45,35 +45,13 @@ export default Vue.extend({
     ...mapGetters([
       'events',
       'areEventsLoading',
-      'devices'
     ])
   },
   methods: {
-    ...mapActions([
-      'deleteDevice',
-      'enableDevice',
-      'disableDevice',
-      'refreshEvents',
-    ]),
-    resolveDeviceName(id: string): string {
-      const device = this.devices.find((elt: Device) => elt.id === id);
-      if (device !== undefined) { return device.name }
-      return id;
-    },
     formatEvent(event: Event): string {
       switch (event.service) {
         case 'vespiary': {
           switch (event.kind) {
-            case 'device_created':
-              return `device ${event.attributes.device_id} created`;
-            case 'device_deleted':
-              return `device ${event.attributes.device_id} deleted`;
-            case 'device_enabled':
-              return `${this.resolveDeviceName(event.attributes.device_id)} enabled`;
-            case 'device_disabled':
-              return `${this.resolveDeviceName(event.attributes.device_id)} disabled`;
-            case 'device_password_changed':
-              return `${this.resolveDeviceName(event.attributes.device_id)} password changed`;
             default:
               return `${event.service}:${event.kind} (${JSON.stringify(event.attributes)})`
           }
@@ -81,13 +59,9 @@ export default Vue.extend({
         default:
           switch (event.kind) {
             case 'session_connected':
-              return `${this.resolveDeviceName(event.attributes.session_id)} connected`
-            case 'subscription_created':
-              return `${this.resolveDeviceName(event.attributes.session_id)} subscribed to topic ${event.attributes.pattern} with QoS ${event.attributes.qos}`
-            case 'subscription_deleted':
-              return `${this.resolveDeviceName(event.attributes.session_id)} unsubscribed from topic ${event.attributes.pattern}`
+              return `${event.attributes.session_id} connected`
             case 'session_disconnected':
-              return `${this.resolveDeviceName(event.attributes.session_id)} disconnected`
+              return `${event.attributes.session_id} disconnected`
             default:
               return `${event.service || 'wasp'}:${event.kind} (${JSON.stringify(event.attributes)})`
           }

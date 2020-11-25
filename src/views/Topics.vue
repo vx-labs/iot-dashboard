@@ -23,7 +23,6 @@ import TopicList from '@/components/TopicList.vue';
 import TopicRecords from '@/components/TopicRecords.vue';
 
 export default Vue.extend({
-  name: 'Devices',
   components: {
     TopicList,
     TopicRecords,

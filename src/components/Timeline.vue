@@ -10,18 +10,22 @@ import 'dygraphs/dist/dygraph.css'
 
 export default {
   name: 'Linechart',
-  props: ['records', 'id'],
+  props: ['records', 'id', 'customBars'],
   data() {
     return {
       plot: null,
       options: {
         labels: ['Time', "Value"],
+        rollPeriod: 10,
+        legend: 'always',
+        showRoller: true,
+        customBars: this.customBars
       },
     }
   },
   watch: {
     records() {
-      if (this.plot !== null && this.records !== undefined && this.records !== null) {
+      if (this.plot !== null && this.records !== undefined && this.records !== null && this.records.length > 0) {
         this.plot.updateOptions({ 'file': this.records, ...this.options });
       }
     },

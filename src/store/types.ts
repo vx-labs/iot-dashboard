@@ -1,8 +1,27 @@
+import { NormalizedCacheObject } from 'apollo-cache-inmemory';
+import { ApolloClient } from 'apollo-client';
 import { ApiClient } from './services/api.service';
 export interface AccountInformations {
   id: string;
   usernames: string[];
 }
+export interface Application {
+  id: string;
+  name: string;
+}
+export interface ApplicationProfile {
+  id: string;
+  applicationId: string;
+  name: string;
+  enabled: boolean;
+}
+export interface Session {
+  id: string;
+  clientId: string;
+  applicationId: string;
+  applicationProfileId: string;
+}
+
 export interface Topic {
   name: string;
   messageCount: number;
@@ -11,7 +30,7 @@ export interface Topic {
   guessedContentType: string;
 }
 export interface Record {
-  timestamp: number;
+  sentAt: Date;
   topic: string;
   payload: string;
   publisher: string;
@@ -21,24 +40,6 @@ export interface Event {
   kind: string;
   service: string;
   attributes: { [name: string]: string };
-}
-export interface CreateDeviceRequest {
-  name: string;
-  password: string;
-  active: boolean;
-}
-export interface Device {
-  id: string;
-  name: string;
-  createdAt: number;
-  active: boolean;
-  password: string;
-  connected: boolean;
-  receivedBytes: number;
-  sentBytes: number;
-  subscriptionCount: number;
-  humanStatus: string;
-  pendingAsyncAction: boolean;
 }
 class Api {
   client = new ApiClient('https://api.iot.cloud.vx-labs.net');
@@ -52,6 +53,9 @@ class Resources {
      { name: 'devices/b', messageCount: 20 },
      */
   ];
+  applications: Application[] = [];
+  applicationProfiles: ApplicationProfile[] = [];
+  sessions: Session[] = [];
   events: Event[] = [
     /* {
        service: "wasp", kind: "session_connected", timestamp: 0, attributes: {
@@ -64,20 +68,10 @@ class Resources {
        }
      },*/
   ]
-  devices: Device[] = [
-    /*{
-      id: '1', name: 'sensor-1', createdAt: 0, active: true, password: '', connected: true, receivedBytes: 19, sentBytes: 98, subscriptionCount: 5,
-    },
-    {
-      id: '2', name: 'sensor-2', createdAt: 0, active: false, password: '', connected: false, receivedBytes: 19, sentBytes: 98, subscriptionCount: 5,
-    },
-    {
-      id: '3', name: 'sensor-3', createdAt: 0, active: true, password: '', connected: false, receivedBytes: 19, sentBytes: 98, subscriptionCount: 5,
-    }*/
-  ];
 }
 
 export class MainState {
+  graphql?: ApolloClient<NormalizedCacheObject>;
   username?: string = undefined;
   api = new Api();
   resources = new Resources();

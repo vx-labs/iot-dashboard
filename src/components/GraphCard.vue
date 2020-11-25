@@ -1,21 +1,18 @@
 <template>
-  <v-card color="green" dark width="350" height="150">
-    <v-card-title class="headline">{{ avg }}</v-card-title>
-    <v-card-subtitle>
-      <strong>{{ title }}</strong>
-    </v-card-subtitle>
-    <v-card-text>
-      <div class="display-1">
-        <v-sparkline
-          :value="serie"
-          color="rgba(255, 255, 255, .7)"
-          line-width="2"
-          padding="24"
-          stroke-linecap="round"
-          smooth
-        ></v-sparkline>
-      </div>
-    </v-card-text>
+  <v-card color="green" dark width="250" height="100">
+    <v-row class="ma-2" align="center" justify="space-around">
+      <v-sparkline
+        :value="serie"
+        color="rgba(255, 255, 255, .7)"
+        line-width="2"
+        padding="24"
+        stroke-linecap="round"
+        smooth
+      ></v-sparkline>
+      <span>
+        <strong>{{ avg }}</strong> {{ title }}</span
+      >
+    </v-row>
   </v-card>
 </template>
 <script lang="ts">

@@ -1,11 +1,6 @@
 <template>
   <v-app>
     <AppDrawer></AppDrawer>
-    <v-app-bar height="73" app flat>
-      <v-spacer></v-spacer>
-      <v-toolbar-title>🐝</v-toolbar-title>
-    </v-app-bar>
-
     <v-main>
       <v-container fluid>
         <router-view></router-view>
@@ -22,6 +17,11 @@ import { mapActions } from 'vuex'
 export default Vue.extend({
   name: 'App',
   components: { AppDrawer },
+  computed: {
+    currentRouteName() {
+      return this.$route.name;
+    },
+  },
   methods: {
     ...mapActions(["handleAuthentication"])
   },
@@ -31,11 +31,8 @@ export default Vue.extend({
       (async () => {
         await this.$store.dispatch('refreshUsername');
         await Promise.all([
-          this.$store.dispatch('refreshDevices'),
-          this.$store.dispatch('refreshTopics'),
-          this.$store.dispatch('refreshEvents'),
+          this.$store.dispatch('init'),
         ]);
-        this.$store.dispatch('startMQTTClient');
       })();
       if (
         window.location.search.includes("code=")) {

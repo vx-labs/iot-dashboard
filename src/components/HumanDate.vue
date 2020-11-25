@@ -10,8 +10,8 @@ export default Vue.extend({
     'timestamp',
   ],
   methods: {
-    formatDate(timestamp: number): string {
-      return moment(timestamp / 1000000).format('YYYY/MM/DD HH:mm:ss');
+    formatDate(timestamp: Date): string {
+      return moment(timestamp).format('YYYY/MM/DD HH:mm:ss');
     }
   },
 })
