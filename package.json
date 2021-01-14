@@ -28,7 +28,7 @@
     "vue-chartjs": "^3.5.0",
     "vue-router": "^3.3.4",
     "vuetify": "^2.3.0",
-    "vuex": "^3.4.0",
+    "vuex": "^3.6.0",
     "ws": "^7.4.0"
   },
   "devDependencies": {
