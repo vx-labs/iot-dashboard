@@ -12,7 +12,7 @@ export default class Authenticator {
       redirect_uri: window.location.origin + '/login',
       cacheLocation: "localstorage",
       connection: 'google-oauth2',
-      audience: 'https://api.iot.cloud.vx-labs.net',
+      audience: 'https://api.vespio.dev',
     })
   }
 

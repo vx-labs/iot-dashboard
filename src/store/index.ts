@@ -122,14 +122,14 @@ const store = new Vuex.Store({
   },
   actions: {
     async init({ dispatch, state, commit }) {
-      const httpLink = new HttpLink({ uri: 'https://api.iot.cloud.vx-labs.net/graphql', fetch });
+      const httpLink = new HttpLink({ uri: 'https://api.vespio.dev/graphql', fetch });
       const httpAuthLink = setContext(async (request, previousContext) => ({
         headers: {
           authorization: `bearer ${await dispatch('refreshToken', {}, { root: true })}`,
         },
       }));
       const wsLink = new WebSocketLink({
-        uri: "wss://api.iot.cloud.vx-labs.net/graphql", // use wss for a secure endpoint
+        uri: "wss://api.vespio.dev/graphql", // use wss for a secure endpoint
         options: {
           connectionParams: async () => {
             return {

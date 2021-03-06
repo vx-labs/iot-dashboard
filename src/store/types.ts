@@ -42,7 +42,7 @@ export interface Event {
   attributes: { [name: string]: string };
 }
 class Api {
-  client = new ApiClient('https://api.iot.cloud.vx-labs.net');
+  client = new ApiClient('https://api.vespio.dev');
 }
 class Resources {
   selectedTopic = '';
