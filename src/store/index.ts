@@ -158,36 +158,36 @@ const store = new Vuex.Store({
       });
       commit('graphqlClientSet', graphqlClient);
       await dispatch('refreshState');
-      graphqlClient.subscribe({
-        query: fullStateSubscription,
-      }).subscribe({
-        next({ data }) {
-          const event = data.auditEvents;
-          switch (event.payload.__typename) {
-            case 'SessionConnectedEvent':
-              commit('sessionConnected', event.payload.session)
-              break
-            case 'SessionDisconnectedEvent':
-              commit('sessionDisconnected', event.payload.id)
-              break
-            case 'ApplicationCreatedEvent':
-              commit('applicationCreated', event.payload.application)
-              break
-            case 'ApplicationDeletedEvent':
-              commit('applicationDeleted', event.payload.id)
-              break
-            case 'ApplicationProfileCreatedEvent':
-              commit('applicationProfileCreated', event.payload.applicationProfile)
-              break
-            case 'ApplicationProfileDeletedEvent':
-              commit('applicationProfileDeleted', event.payload.id)
-              break
-            default:
-              console.log(`unmatched event: ${event.payload.__typename}`)
-          }
-        },
-        error(err) { console.error('err', err); },
-      });
+      // graphqlClient.subscribe({
+      //   query: fullStateSubscription,
+      // }).subscribe({
+      //   next({ data }) {
+      //     const event = data.auditEvents;
+      //     switch (event.payload.__typename) {
+      //       case 'SessionConnectedEvent':
+      //         commit('sessionConnected', event.payload.session)
+      //         break
+      //       case 'SessionDisconnectedEvent':
+      //         commit('sessionDisconnected', event.payload.id)
+      //         break
+      //       case 'ApplicationCreatedEvent':
+      //         commit('applicationCreated', event.payload.application)
+      //         break
+      //       case 'ApplicationDeletedEvent':
+      //         commit('applicationDeleted', event.payload.id)
+      //         break
+      //       case 'ApplicationProfileCreatedEvent':
+      //         commit('applicationProfileCreated', event.payload.applicationProfile)
+      //         break
+      //       case 'ApplicationProfileDeletedEvent':
+      //         commit('applicationProfileDeleted', event.payload.id)
+      //         break
+      //       default:
+      //         console.log(`unmatched event: ${event.payload.__typename}`)
+      //     }
+      //   },
+      //   error(err) { console.error('err', err); },
+      // });
     },
     async refreshSelectedTopicRecords({ state, dispatch, commit }) {
       return dispatch('topicRecords/load', async () => {
