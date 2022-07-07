@@ -22,7 +22,7 @@
     "dygraphs": "^2.1.0",
     "graphql": "^15.4.0",
     "graphql-request": "^3.3.0",
-    "moment": "^2.26.0",
+    "moment": "^2.29.4",
     "subscriptions-transport-ws": "^0.9.18",
     "vue": "^2.6.11",
     "vue-chartjs": "^3.5.0",
