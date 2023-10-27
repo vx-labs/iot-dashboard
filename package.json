@@ -16,7 +16,7 @@
     "apollo-link-ws": "^1.0.20",
     "async-mqtt": "^2.6.0",
     "auth0-js": "^9.13.2",
-    "axios": "^0.21.1",
+    "axios": "^1.6.0",
     "chart.js": "^2.9.3",
     "core-js": "^3.6.5",
     "dygraphs": "^2.1.0",
